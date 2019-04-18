@@ -39,4 +39,13 @@ public class Playlist {
             inverseJoinColumns = @JoinColumn(name = "track_id")
     )
     private Set<Track> tracklist;
+
+    @ManyToMany
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JoinTable(
+            name = "genre_to_playlist",
+            joinColumns = @JoinColumn(name = "playlist_id"),
+            inverseJoinColumns = @JoinColumn(name = "genre_id")
+    )
+    private Set<Genre> genres;
 }
