@@ -1,7 +1,5 @@
 package com.example.playlistgenerator.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +10,8 @@ import org.hibernate.annotations.LazyCollectionOption;
 import javax.persistence.*;
 import java.util.Set;
 
-
+@Entity(name = "Playlist")
+@Table(name = "playlists")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -29,7 +28,7 @@ public class Playlist {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private UserDetails user;
 
     @ManyToMany
     @LazyCollection(LazyCollectionOption.FALSE)
