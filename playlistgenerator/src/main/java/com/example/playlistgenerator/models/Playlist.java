@@ -28,7 +28,7 @@ public class Playlist {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private UserDetails user;
+    private User user;
 
     @ManyToMany
     @LazyCollection(LazyCollectionOption.FALSE)
