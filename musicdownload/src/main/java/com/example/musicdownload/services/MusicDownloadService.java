@@ -69,12 +69,12 @@ public class MusicDownloadService {
         trackRepository.saveAll(tracks);
     }
 
-    private void saveAlbumsFromTracks(List<Track> tracks){
+    private void saveArtistsFromTracks(List<Track> tracks){
         List<Artist> artists = getArtists(tracks);
         artistRepository.saveAll(artists);
     }
 
-    private void saveArtistsFromTracks(List<Track> tracks){
+    private void saveAlbumsFromTracks(List<Track> tracks){
         List<Album> albums = getAlbums(tracks);
         albumRepository.saveAll(albums);
     }
