@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TrackRepository extends CrudRepository<Track, Long> {
+    Iterable<Track> findAllByGenre(String genre);
 }

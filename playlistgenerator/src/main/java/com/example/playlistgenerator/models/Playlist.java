@@ -47,4 +47,13 @@ public class Playlist {
             inverseJoinColumns = @JoinColumn(name = "genre_id")
     )
     private Set<Genre> genres;
+
+    public int getPlaylistDuration() {
+        int playlistDuration = 0;
+        for (Track track : tracklist) {
+            playlistDuration += track.getDuration();
+        }
+
+        return playlistDuration;
+    }
 }

@@ -1,5 +1,7 @@
 package com.example.playlistgenerator.models;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
@@ -7,6 +9,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -46,6 +49,10 @@ public class User{
     	joinColumns = @JoinColumn(name = "user_id"),
     	inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
+
+    @OneToMany(targetEntity = Playlist.class, mappedBy = "user")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<Playlist> userPlaylists;
 
     public User() {}
 
