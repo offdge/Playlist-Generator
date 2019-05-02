@@ -1,4 +1,4 @@
-package com.example.playlistgenerator.controller;
+package com.example.playlistgenerator.controllers;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;

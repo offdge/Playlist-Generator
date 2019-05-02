@@ -1,4 +1,4 @@
-package com.example.playlistgenerator.controller;
+package com.example.playlistgenerator.controllers;
 
 import com.example.playlistgenerator.message.request.LoginForm;
 import com.example.playlistgenerator.message.request.SignUpForm;
@@ -71,17 +71,15 @@ public class AuthRestAPIs {
                     HttpStatus.BAD_REQUEST);
         }
 
-        // Creating user's account
         User user = new User(signUpRequest.getName(), signUpRequest.getUsername(), signUpRequest.getEmail(),
                 encoder.encode(signUpRequest.getPassword()));
 
-        Set<String> strRoles = signUpRequest.getRole();
+        Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
+                .orElseThrow(() -> new RuntimeException("Fail! -> Cause: User Role not find."));
+
         Set<Role> roles = new HashSet<>();
 
-        Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
-                            .orElseThrow(() -> new RuntimeException("Fail! -> Cause: User Role not find."));
-                    roles.add(userRole);
-
+        roles.add(userRole);
         user.setRoles(roles);
         userRepository.save(user);
 
