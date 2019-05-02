@@ -23,7 +23,7 @@ public class PlaylistRestController {
         this.service = service;
     }
 
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @PostMapping("/createPlaylist/{genre}")
     public ResponseEntity createBeer (String genre) {
         service.createPlaylistByGenre(genre);
