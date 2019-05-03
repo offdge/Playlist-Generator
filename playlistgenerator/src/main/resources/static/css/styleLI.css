@@ -250,7 +250,8 @@ body {
   -ms-transform: translate(-50%, -50%); }
 
 .signup {
-  margin-bottom: 150px; }
+  margin-top: 25px;
+  margin-bottom: 10px; }
 
 .signup-content {
   padding: 30px 0; }
@@ -291,8 +292,10 @@ figure {
   .form-submit:hover {
     background: #4292dc; }
 
-#signin {
-  margin-top: 16px; }
+#login {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
 
 .signup-image-link {
   font-size: 14px;
