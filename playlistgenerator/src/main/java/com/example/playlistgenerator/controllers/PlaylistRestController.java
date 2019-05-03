@@ -6,10 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -25,7 +22,7 @@ public class PlaylistRestController {
 
 //    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @PostMapping("/createPlaylist/{genre}")
-    public ResponseEntity createBeer (String genre) {
+    public ResponseEntity createPlaylistByGenre (@PathVariable String genre) {
         service.createPlaylistByGenre(genre);
         return new ResponseEntity(HttpStatus.OK);
     }

@@ -1,13 +1,11 @@
 package com.example.playlistgenerator.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity(name = "Playlist")
@@ -15,7 +13,7 @@ import java.util.Set;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class Playlist {
 
     @Id
@@ -37,7 +35,7 @@ public class Playlist {
             joinColumns = @JoinColumn(name = "playlist_id"),
             inverseJoinColumns = @JoinColumn(name = "track_id")
     )
-    private Set<Track> tracklist;
+    private Set<Track> tracklist = new HashSet<>();
 
     @ManyToMany
     @LazyCollection(LazyCollectionOption.FALSE)

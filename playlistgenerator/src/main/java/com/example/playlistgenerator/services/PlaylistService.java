@@ -24,7 +24,7 @@ public class PlaylistService {
 
     public Playlist createPlaylistByGenre(String genre) {
         Playlist playlist = new Playlist();
-        Iterable<Track> iterable = trackRepository.findAllByGenre(genre);
+        Iterable<Track> iterable = trackRepository.findAllByGenreName(genre);
         List<Track> tracks = StreamSupport
                 .stream(iterable.spliterator(), false)
                 .collect(Collectors.toList());
