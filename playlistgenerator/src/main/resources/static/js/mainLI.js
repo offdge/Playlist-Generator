@@ -1,40 +1,33 @@
-// Get the beerModal
-var signUpModal = document.getElementById('signUpModal');
+"use strict"
+$(document).ready(function () {
 
-// Get the button that opens the beerModal
-var btn = document.getElementById("signup");
+    $('#playlistTable').DataTable({
+        dom: "Bfrtip",
+        "responsive": true,
+        "processing": true,
+        ajax: {
+            type: "GET",
+            contentType: "application/json",
+            dataType: "json",
+            url: "http://localhost:8080/playlist/getPlaylists",
+            dataSrc: "",
+        },
+        order: [[ 2, "asc" ]],
+        columns: [
+            {
+                "data": 'playlistTitle',
+                fnCreatedCell: function (nTd, cellData, rowData) {
+                    if (rowData.playlistTitle) {
+                        $(nTd).html("<span style='cursor:pointer; color: #9B4B0E'>" + rowData.playlistTitle + "</span>")
+                    }
 
-// Get the <span> elements that closes the modals
-var signUpSpan = document.getElementById("singUpClose");
-
-// When the user clicks on <span> (x), close the beerModal
-signUpSpan.onclick = function () {
-    signUpModal.style.display = "none";
-}
-
-// When the user clicks anywhere outside of the beerModal, close it
-window.onclick = function (event) {
-    if (event.target == signUpModal) {
-        signUpModal.style.display = "none";
-    }
-}
-
-$(document).keyup(function (e) {
-    if (e.key === "Escape") {
-        signUpModal.style.display = "none";
-    }
+                }
+            },
+            {"data": 'rating'},
+            {"data": 'playlistDuration'},
+            {"data": 'genresToString'},
+            // etc
+        ],
+        select: true
+    });
 });
-
-function displaySignUpModal() {
-    signUpModal.style.display = "block";
-}
-
-
-// $(function(){
-//     $("#signup").click(function(){
-//         $(".signup").modal('show');
-//     });
-//     $(".signup").modal({
-//         closable: true
-//     });
-// });

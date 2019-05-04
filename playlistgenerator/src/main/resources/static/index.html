@@ -9,6 +9,8 @@
 
   <title>~ TripTones - the soundtrack of your trip ~</title>
 
+
+
   <!-- Bootstrap Core CSS -->
   <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
 
@@ -19,13 +21,6 @@
   <link href="css/style.css" rel="stylesheet">
   <link rel="stylesheet" href="css/styleLI.css">
   <link href="color/default.css" rel="stylesheet">
-
-  <!-- =======================================================
-    Theme Name: Squadfree
-    Theme URL: https://bootstrapmade.com/squadfree-free-bootstrap-template-creative/
-    Author: BootstrapMade
-    Author URL: https://bootstrapmade.com
-  ======================================================= -->
 
 </head>
 
@@ -51,8 +46,8 @@
         <ul class="nav navbar-nav">
           <li class="active"><a href="#intro">Home</a></li>
           <li><a href="#about">About</a></li>
-          <li><a href="#service">Playlists</a></li>
-          <li><a href="#contact">Contact</a></li>
+          <li><a href="#playlists">Playlists</a></li>
+          <li><a href="#createPlaylist">Create playlist</a></li>
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">User <b class="caret"></b></a>
             <ul class="dropdown-menu">
@@ -76,7 +71,7 @@
       <h4>A playlist generator for tripoholics and music lovers</h4>
     </div>
     <div class="page-scroll">
-      <a href="#service" class="btn btn-circle">
+      <a href="#playlists" class="btn btn-circle">
 				<i class="fa fa-angle-double-down animated"></i>
 			</a>
     </div>
@@ -107,25 +102,16 @@
           <hr class="marginbot-50">
         </div>
       </div>
+      <div class="col-md-3">
+      </div>
       <div class="row">
-        <div class="col-md-3">
-          <div class="wow bounceInUp" data-wow-delay="0.2s">
-            <div class="team boxed-grey">
-              <div class="inner">
-                <h5>Anna Hanaceck</h5>
-                <p class="subtitle">Pixel Crafter</p>
-                <div class="avatar"><img src="img/team/1.jpg" alt="" class="img-responsive img-circle" /></div>
-              </div>
-            </div>
-          </div>
-        </div>
         <div class="col-md-3">
           <div class="wow bounceInUp" data-wow-delay="0.5s">
             <div class="team boxed-grey">
               <div class="inner">
-                <h5>Maura Daniels</h5>
-                <p class="subtitle">Ruby on Rails</p>
-                <div class="avatar"><img src="img/team/2.jpg" alt="" class="img-responsive img-circle" /></div>
+                <h5>Georgi Dekov</h5>
+                <p class="subtitle">Alpha Java Student</p>
+                <div class="avatar"><img src="img/georgi.jpg" alt="" class="img-responsive img-circle" /></div>
 
               </div>
             </div>
@@ -135,21 +121,53 @@
           <div class="wow bounceInUp" data-wow-delay="0.8s">
             <div class="team boxed-grey">
               <div class="inner">
-                <h5>Jack Briane</h5>
-                <p class="subtitle">jQuery Ninja</p>
-                <div class="avatar"><img src="img/team/3.jpg" alt="" class="img-responsive img-circle" /></div>
+                <h5>Hrista Raleva</h5>
+                <p class="subtitle">Alpha Java Student</p>
+                <div class="avatar"><img src="img/hrista.jpg" alt="" class="img-responsive img-circle" /></div>
 
               </div>
             </div>
           </div>
         </div>
         <div class="col-md-3">
-          <div class="wow bounceInUp" data-wow-delay="1s">
-            <div class="team boxed-grey">
-              <div class="inner">
-                <h5>Tom Petterson</h5>
-                <p class="subtitle">Typographer</p>
-                <div class="avatar"><img src="img/team/4.jpg" alt="" class="img-responsive img-circle" /></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- /Section: about -->
+
+
+  <!-- Section: playlists -->
+  <section id="playlists" class="home-section text-center bg-gray">
+
+    <div class="heading-about">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2">
+            <div class="wow bounceInDown" data-wow-delay="0.4s">
+              <div class="section-heading">
+                <h2>Playlists</h2>
+                <i class="fa fa-2x fa-angle-down"></i>
+                <div>
+                  <table id="playlistTable" class="beersTable display responsive nowrap" style="width: 100%">
+                    <thead>
+                    <tr>
+                      <th>Playlist</th>
+                      <th>Average rank</th>
+                      <th>Duration</th>
+                      <th>Genres</th>
+                    </tr>
+                    </thead>
+                    <tfoot>
+                    <tr>
+                      <th>Playlist</th>
+                      <th>Average rank</th>
+                      <th>Duration</th>
+                      <th>Genres</th>
+                    </tr>
+                    </tfoot>
+                  </table>
+                </div>
 
               </div>
             </div>
@@ -157,9 +175,90 @@
         </div>
       </div>
     </div>
-  </section>
-  <!-- /Section: about -->
 
+  </section>
+  <!-- /Section: playlists -->
+
+  <!-- Section: createPlaylist -->
+  <section id="createPlaylist" class="home-section text-center bg-gray">
+
+    <div class="heading-about">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2">
+            <div class="wow bounceInDown" data-wow-delay="0.4s">
+              <div class="section-heading">
+                <h2>Create your playlist</h2>
+                <i class="fa fa-2x fa-angle-down"></i>
+                <form>
+                  <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
+                    <div class="col-sm-10">
+                      <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="inputPassword3" class="col-sm-2 col-form-label">Password</label>
+                    <div class="col-sm-10">
+                      <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+                    </div>
+                  </div>
+                  <fieldset class="form-group">
+                    <div class="row">
+                      <legend class="col-form-label col-sm-2 pt-0">Radios</legend>
+                      <div class="col-sm-10">
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1" checked>
+                          <label class="form-check-label" for="gridRadios1">
+                            First radio
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2">
+                          <label class="form-check-label" for="gridRadios2">
+                            Second radio
+                          </label>
+                        </div>
+                        <div class="form-check disabled">
+                          <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios3" value="option3" disabled>
+                          <label class="form-check-label" for="gridRadios3">
+                            Third disabled radio
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </fieldset>
+                  <div class="form-group row">
+                    <div class="col-sm-2">Checkbox</div>
+                    <div class="col-sm-10">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="gridCheck1">
+                        <label class="form-check-label" for="gridCheck1">
+                          Example checkbox
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <div class="col-sm-10">
+                      <button type="submit" class="btn btn-primary">Sign in</button>
+                    </div>
+                  </div>
+                </form>
+
+                <div>
+
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+  <!-- /Section: createPlaylist -->
 
   <!-- Section: services -->
   <section id="service" class="home-section text-center bg-gray">
@@ -354,11 +453,13 @@
   <script src="js/jquery.easing.min.js"></script>
   <script src="js/jquery.scrollTo.js"></script>
   <script src="js/wow.min.js"></script>
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
   <script src="js/mainLI.js"></script>
   <!-- Custom Theme JavaScript -->
   <script src="js/custom.js"></script>
   <script src="contactform/contactform.js"></script>
 
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
 </body>
 
 </html>

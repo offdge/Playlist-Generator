@@ -5,8 +5,7 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity(name = "Playlist")
 @Table(name = "playlists")
@@ -44,7 +43,7 @@ public class Playlist {
             joinColumns = @JoinColumn(name = "playlist_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id")
     )
-    private Set<Genre> genres = new HashSet<>();
+    private List<Genre> genres = new ArrayList<>();
 
     public int getPlaylistDuration() {
         int playlistDuration = 0;
@@ -61,5 +60,23 @@ public class Playlist {
 
     public void addGenre(Genre genre){
         this.genres.add(genre);
+    }
+
+    public long getRating(){
+        int rating = 0;
+        for (Track track: tracklist) {
+            rating += track.getRank();
+        }
+
+        return rating / tracklist.size();
+    }
+
+    public String getGenresToString(){
+        List<String> genreNames = new ArrayList<>();
+        for (Genre genre : genres) {
+            genreNames.add(genre.getName());
+        }
+
+        return String.join(", ", genreNames);
     }
 }

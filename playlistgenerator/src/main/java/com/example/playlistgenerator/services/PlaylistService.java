@@ -60,8 +60,8 @@ public class PlaylistService {
         playlist.setPlaylistTitle(playlistDto.getTitle());
 
         // to be replaced with real user using
-        //User user = userRepository.findByUsername("bizzcuit").get();
-        //playlist.setUser(user);
+//        User user = userRepository.findByUsername("bizzcuit").get();
+//        playlist.setUser(user);
 
         long duration = locationService.getTravelDuration(
                 playlistDto.getStartPoint(), playlistDto.getEndPoint());
@@ -71,9 +71,15 @@ public class PlaylistService {
                 Playlist genrePlaylist = createPlaylistByGenre(
                         genre, (duration * genreDto.getPercentage() * 60) / 100);
                 playlist.addTracks(genrePlaylist.getTracklist());
-                playlist.addGenre(genre);
+                if (genreDto.getPercentage() > 0) {
+                    playlist.addGenre(genre);
+                }
         });
 
         playlistRepository.save(playlist);
+    }
+
+    public Iterable<Playlist> getAllPlaylists() {
+        return playlistRepository.findAll();
     }
 }

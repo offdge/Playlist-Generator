@@ -1,5 +1,6 @@
 package com.example.playlistgenerator.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -60,6 +61,7 @@ public class Track {
         joinColumns = @JoinColumn(name = "track_id"),
         inverseJoinColumns = @JoinColumn (name = "playlist_id")
     )
+    @JsonIgnore
     private Set<Playlist> playlist;
 
 }

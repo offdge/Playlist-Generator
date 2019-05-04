@@ -403,8 +403,11 @@ input[type=checkbox]:not(old):checked + label > span:before {
   display: inline-block;
   width: auto; }
 
+.col-sm-2.col-form-label {
+  width: 100px;
+}
 label {
-  position: absolute;
+  margin-top: 15px;
   left: 0;
   top: 50%;
   transform: translateY(-50%);
@@ -527,7 +530,9 @@ label.valid {
     max-width: 100%; } }
 @media screen and (min-width: 1024px) {
   .container {
-    max-width: 1200px; } }
+    max-width: 1200px; }
+  .container-about {
+    max-width: 600px; } }
 @media screen and (max-width: 768px) {
   .signup-content, .signin-content {
     flex-direction: column;
