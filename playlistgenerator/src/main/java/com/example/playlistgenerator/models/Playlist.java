@@ -44,7 +44,7 @@ public class Playlist {
             joinColumns = @JoinColumn(name = "playlist_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id")
     )
-    private Set<Genre> genres;
+    private Set<Genre> genres = new HashSet<>();
 
     public int getPlaylistDuration() {
         int playlistDuration = 0;
@@ -53,5 +53,13 @@ public class Playlist {
         }
 
         return playlistDuration;
+    }
+
+    public void addTracks(Set<Track> tracks){
+        this.tracklist.addAll(tracks);
+    }
+
+    public void addGenre(Genre genre){
+        this.genres.add(genre);
     }
 }
