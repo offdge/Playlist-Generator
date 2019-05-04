@@ -1,5 +1,6 @@
 package com.example.playlistgenerator.services;
 
+import com.example.playlistgenerator.exception.LocationNotFoundException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +17,6 @@ import java.util.List;
 public class LocationService {
 
     private static final String API_KEY = "Apje4EpG8MDdJIUPhxKVpsu_DBQuyJQQ6zKBvULftlYaVTDrGm5OqAtM6vJrjKCy";
-
-    private static final String ERROR_DURING_PARSING_THE_JSON_OBJECT = "Error during parsing the Json object";
 
     private RestTemplate restTemplate;
 
@@ -53,13 +52,11 @@ public class LocationService {
                             travelDuration[0] = jsonNode.path("travelDuration").asLong());
 
                 } catch (IOException e) {
-                    throw new IllegalArgumentException(ERROR_DURING_PARSING_THE_JSON_OBJECT);
+                    throw new LocationNotFoundException("Error during parsing the Json object");
                 }
             }
-        }
-        catch (NoSuchFieldException e) {
-            throw new IllegalArgumentException("Wrong input");
-//            log.error(e.getMessage());
+        } catch (NoSuchFieldException e) {
+            throw new LocationNotFoundException(e.getMessage());
         }
 
         return travelDuration[0];
@@ -98,7 +95,7 @@ public class LocationService {
                                     coordinates.add(coordinate.asText())));
                 }
             } catch (IOException e) {
-//                log.error(ERROR_DURING_PARSING_THE_JSON_OBJECT);
+                throw new LocationNotFoundException("Error during parsing the Json object");
             }
         }
 

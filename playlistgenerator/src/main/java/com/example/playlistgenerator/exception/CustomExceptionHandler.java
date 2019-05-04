@@ -24,11 +24,11 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(RecordNotFoundException.class)
-    public final ResponseEntity<Object> handleUserNotFoundException(RecordNotFoundException ex, WebRequest request) {
+    @ExceptionHandler(LocationNotFoundException.class)
+    public final ResponseEntity<Object> handleLocationNotFoundException(LocationNotFoundException ex, WebRequest request) {
         List<String> details = new ArrayList<>();
         details.add(ex.getLocalizedMessage());
-        ErrorResponse error = new ErrorResponse("Record Not Found", details);
+        ErrorResponse error = new ErrorResponse("Location Not Found", details);
         return new ResponseEntity(error, HttpStatus.NOT_FOUND);
     }
 
