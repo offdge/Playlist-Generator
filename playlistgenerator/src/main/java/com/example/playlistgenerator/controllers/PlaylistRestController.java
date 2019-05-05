@@ -6,6 +6,7 @@ import com.example.playlistgenerator.services.PlaylistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,13 +30,14 @@ public class PlaylistRestController {
 
     //    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @PostMapping("/createPlaylist")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity createPlaylistByGenre (@RequestBody PlaylistDto playlistDto) {
         service.generatePlaylist(playlistDto);
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @GetMapping("/getPlaylists")
-    public Iterable<Playlist> getAllBeers() {
+    public Iterable<Playlist> getAllPlaylists() {
         return service.getAllPlaylists();
     }
 }

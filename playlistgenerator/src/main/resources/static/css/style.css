@@ -214,10 +214,10 @@ a:focus {
 
 @keyframes shadowSpin{
   0%{
-    box-shadow: 10px -10px #39CCCC, -10px 10px #FFDC00;
+    box-shadow: 10px -10px #39CCCC, 0px 10px #FFDC00;
   }
   25%{
-    box-shadow: 10px 10px #39CCCC, -10px -10px #FFDC00;
+    box-shadow: 10px 10px #39CCCC, 0px -10px #FFDC00;
   }
   50%{
     box-shadow: -10px 10px #39CCCC, 10px -10px #FFDC00;
@@ -226,7 +226,7 @@ a:focus {
     box-shadow: -10px -10px #39CCCC, 10px 10px #FFDC00;
   }
   100%{
-    box-shadow: 10px -10px #39CCCC, -10px 10px #FFDC00;
+    box-shadow: 10px -10px #39CCCC, 0px 10px #FFDC00;
   }
 }
 
@@ -696,7 +696,7 @@ Parallax
 }
 
 @-webkit-keyframes pulse {
-    0 {
+    0% {
         -webkit-transform: scale(1);
         transform: scale(1);
     }
@@ -713,7 +713,7 @@ Parallax
 }
 
 @-moz-keyframes pulse {
-    0 {
+    0% {
         -moz-transform: scale(1);
         transform: scale(1);
     }
