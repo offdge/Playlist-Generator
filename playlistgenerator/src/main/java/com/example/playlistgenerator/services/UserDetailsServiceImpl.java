@@ -1,7 +1,8 @@
-package com.example.playlistgenerator.security.services;
+package com.example.playlistgenerator.services;
 
 import com.example.playlistgenerator.models.User;
 import com.example.playlistgenerator.repositories.UserRepository;
+import com.example.playlistgenerator.models.UserPrinciple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

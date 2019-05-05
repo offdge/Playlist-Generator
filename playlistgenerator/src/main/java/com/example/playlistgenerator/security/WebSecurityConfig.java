@@ -2,7 +2,7 @@ package com.example.playlistgenerator.security;
 
 import com.example.playlistgenerator.security.jwt.JwtAuthEntryPoint;
 import com.example.playlistgenerator.security.jwt.JwtAuthTokenFilter;
-import com.example.playlistgenerator.security.services.UserDetailsServiceImpl;
+import com.example.playlistgenerator.services.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

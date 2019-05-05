@@ -1,6 +1,6 @@
 package com.example.playlistgenerator.security.jwt;
 
-import com.example.playlistgenerator.security.services.UserPrinciple;
+import com.example.playlistgenerator.models.UserPrinciple;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

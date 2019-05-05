@@ -1,6 +1,6 @@
 package com.example.playlistgenerator.security.jwt;
 
-import com.example.playlistgenerator.security.services.UserDetailsServiceImpl;
+import com.example.playlistgenerator.services.UserDetailsServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

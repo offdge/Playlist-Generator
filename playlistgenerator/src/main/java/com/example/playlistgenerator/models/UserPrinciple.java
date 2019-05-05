@@ -1,6 +1,5 @@
-package com.example.playlistgenerator.security.services;
+package com.example.playlistgenerator.models;
 
-import com.example.playlistgenerator.models.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

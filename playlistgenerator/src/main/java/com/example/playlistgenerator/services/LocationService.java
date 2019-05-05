@@ -62,7 +62,7 @@ public class LocationService {
         return travelDuration[0];
     }
 
-    private String getCoordinatesAsString(String location) throws NoSuchFieldException {
+    public String getCoordinatesAsString(String location) throws NoSuchFieldException {
 
         String url = "http://dev.virtualearth.net/REST/v1/Locations/"
                 + location

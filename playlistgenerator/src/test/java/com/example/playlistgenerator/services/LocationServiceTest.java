@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.web.client.RestTemplate;
 
@@ -19,15 +20,9 @@ public class LocationServiceTest {
         MockitoAnnotations.initMocks(this);
     }
 
-//    @Test
-//    public void testGetTravelDuration() throws NullPointerException {
-//        long result = locationService.getTravelDuration("Sofia", "Plovdiv");
-//        Assert.assertEquals(91L, result);
-//    }
-
     @Test(expected = NullPointerException.class)
-    public void getTravelDurationThrowsWhenEmptyInput() {
-        locationService.getTravelDuration("", "");
+    public void getCoordinatesAsString_Should_Throw_Exception_If_Not_Exist() throws NoSuchFieldException {
+        locationService.getCoordinatesAsString("test");
     }
 }
 
