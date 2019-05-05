@@ -152,11 +152,11 @@
                 <div>
                   <table id="playlistTable" class="beersTable display responsive nowrap" style="width: 100%">
                     <thead>
-                    <tr align="center">
+                    <tr style="align-content: center" align="center">
                       <th>Playlist</th>
                       <th>Average rank</th>
                       <th>Duration (min)</th>
-                      <th>Genres</th>
+                      <th align="center">Genres</th>
                     </tr>
                     </thead>
                     <tfoot>
@@ -192,7 +192,7 @@
                 <h2>Create your playlist</h2>
                 <i class="fa fa-2x fa-angle-down"></i>
 
-                <form onsubmit="return validateForm()">
+                <form id="playlist-form">
 
                   <div class="form-group row">
                     <label for="inputOrigin" class="col-sm-2 col-form-label">From</label>
@@ -233,8 +233,8 @@
                     </div>
                   </div>
                   <div style="align-items: start" class="form-group row">
-                    <input class="checkboxx" type="checkbox" name="topRanked" value="topRanked"> use top ranked songs<br>
-                    <input class="checkboxx" type="checkbox" name="sameArtists" value="sameArtists"> allow tracks from same artists<br>
+                    <input class="checkboxx" id="topRanked" type="checkbox" name="topRanked" value="topRanked"> use top ranked songs<br>
+                    <input class="checkboxx" id="sameArtists" type="checkbox" name="sameArtists" value="sameArtists"> allow tracks from same artists<br>
                   </div>
                   <div style="align-items: start" class="form-group row">
                     <div style="width:800px; margin:0 auto;">

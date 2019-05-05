@@ -51,7 +51,11 @@ public class Playlist {
             playlistDuration += track.getDuration();
         }
 
-        return playlistDuration / 60;
+        return playlistDuration;
+    }
+
+    public int getPlaylistDurationMinutes(){
+        return getPlaylistDuration() / 60;
     }
 
     public void addTracks(Set<Track> tracks){

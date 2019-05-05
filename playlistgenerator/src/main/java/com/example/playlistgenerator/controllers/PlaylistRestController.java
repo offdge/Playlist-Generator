@@ -35,7 +35,7 @@ public class PlaylistRestController {
     public ResponseEntity createPlaylistByGenre (@RequestBody PlaylistDto playlistDto, Authentication authentication) {
         String username = authentication.getName();
         service.generatePlaylist(playlistDto, username);
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/getPlaylists")

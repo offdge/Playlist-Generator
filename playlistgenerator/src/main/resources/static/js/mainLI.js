@@ -1,7 +1,7 @@
 "use strict"
 $(document).ready(function () {
 
-    $('#playlistTable').DataTable({
+   $('#playlistTable').DataTable({
         dom: "Bfrtip",
         "responsive": true,
         "processing": true,
@@ -24,28 +24,12 @@ $(document).ready(function () {
                 }
             },
             {"data": 'rating'},
-            {"data": 'playlistDuration'},
+            {"data": 'playlistDurationMinutes'},
             {"data": 'genresToString'},
             // etc
         ],
         select: true
     });
-
-
-    $("#generatePlaylist").click(checkLength);
-
-    function checkLength(){
-        var fieldValRock = document.getElementById('inputGenreRock').value;
-        var fieldValRap = document.getElementById('inputGenreRap').value;
-        var fieldValPop = document.getElementById('inputGenrePop').value;
-
-        if(+fieldValRock + +fieldValRap + +fieldValPop !== 100){
-            alert("The combined percentages must equal to 100");
-            return false;
-        }
-
-        return true;
-    }
 
     // VARIABLES =============================================================
     var TOKEN_KEY = "jwtToken";
@@ -65,6 +49,8 @@ $(document).ready(function () {
     }
 
     function setJwtToken(token, username) {
+        console.log(token);
+        console.log(username);
         localStorage.setItem(TOKEN_KEY, token);
         localStorage.setItem(USER_NAME, username);
     }
@@ -72,6 +58,15 @@ $(document).ready(function () {
     function removeJwtToken() {
         localStorage.removeItem(TOKEN_KEY);
         localStorage.removeItem(USER_NAME);
+    }
+
+    function createAuthorizationTokenHeader() {
+        var token = getJwtToken();
+        if (token) {
+            return {"Authorization": "Bearer " + token};
+        } else {
+            return {};
+        }
     }
 
     $("#logout-nav").click(doLogout);
@@ -85,7 +80,8 @@ $(document).ready(function () {
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (data, textStatus, jqXHR) {
-                setJwtToken(data.token, loginData.username);
+                console.log(data);
+                setJwtToken(data.accessToken, loginData.username);
                 $('#user-dropdown-toggle')
                     .html(loginData.username + " <b class=\"caret\">");
                 $login.hide();
@@ -134,6 +130,35 @@ $(document).ready(function () {
         });
     }
 
+
+    function doCreatePlaylist(playlistData) {
+        console.log(playlistData);
+        $.ajax({
+            url: "/playlist/createPlaylist",
+            type: "POST",
+            data: JSON.stringify(playlistData),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            headers: createAuthorizationTokenHeader(),
+            success: function (data, textStatus, jqXHR) {
+                console.log("yeah");
+                $('#playlistTable').DataTable().ajax.reload();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log("asdasdasdasdasdasd");
+                if (jqXHR.status === 401 || jqXHR.status === 403) {
+                    $('#loginErrorModal')
+                        .modal("show")
+                        .find(".modal-body")
+                        .empty()
+                        .html("<p>Message from server:<br>" + jqXHR.responseText + "</p>");
+                } else {
+                    throw new Error("an unexpected error occured: " + errorThrown);
+                }
+            }
+        });
+    }
+
     function doLogout() {
         removeJwtToken();
         $login.show();
@@ -146,6 +171,39 @@ $(document).ready(function () {
     }
 
     // REGISTER EVENT LISTENERS =============================================================
+
+
+    $("#playlist-form").submit(function (event) {
+        event.preventDefault();
+
+        if(!checkLength()){ return false;}
+
+        var $form = $(this);
+        var formData = {
+            startPoint: $form.find('input[id="inputOrigin"]').val(),
+            endPoint: $form.find('input[id="inputDestination"]').val(),
+            title: $form.find('input[id="inputPlaylistName"]').val(),
+            useTopRanks: $form.find('input[id="topRanked"]').is(":checked"),
+            allowSameArtist: $form.find('input[id="sameArtists"]').is(":checked"),
+            genres:[
+                {
+                    name: "rock",
+                    percentage: $form.find('input[id="inputGenreRock"]').val()
+                },
+                {
+                    name: "pop",
+                    percentage: $form.find('input[id="inputGenrePop"]').val()
+                },
+                {
+                    name: "Rap/Hip Hop",
+                    percentage: $form.find('input[id="inputGenreRap"]').val()
+                }]
+        };
+
+        doCreatePlaylist(formData);
+    });
+
+
     $("#login-form").submit(function (event) {
         event.preventDefault();
 
@@ -185,5 +243,19 @@ $(document).ready(function () {
         $logoutNav.hide();
         $('#user-dropdown-toggle')
             .html("User <b class=\"caret\">");
+    }
+
+
+    function checkLength(){
+        var fieldValRock = document.getElementById('inputGenreRock').value;
+        var fieldValRap = document.getElementById('inputGenreRap').value;
+        var fieldValPop = document.getElementById('inputGenrePop').value;
+
+        if(+fieldValRock + +fieldValRap + +fieldValPop !== 100){
+            alert("The combined percentages must equal to 100");
+            return false;
+        }
+
+        return true;
     }
 });

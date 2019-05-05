@@ -60,10 +60,6 @@ public class PlaylistService {
         playlist.setUser(userRepository.findByUsername(username).get());
         playlist.setPlaylistTitle(playlistDto.getTitle());
 
-        // to be replaced with real user using
-//        User user = userRepository.findByUsername("bizzcuit").get();
-//        playlist.setUser(user);
-
         long duration = locationService.getTravelDuration(
                 playlistDto.getStartPoint(), playlistDto.getEndPoint());
 
