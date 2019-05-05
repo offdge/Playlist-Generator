@@ -1,5 +1,6 @@
 package com.example.playlistgenerator.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.NaturalId;
@@ -48,6 +49,7 @@ public class User{
     @JoinTable(name = "user_roles",
     	joinColumns = @JoinColumn(name = "user_id"),
     	inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @JsonIgnore
     private Set<Role> roles = new HashSet<>();
 
     @OneToMany(targetEntity = Playlist.class, mappedBy = "user")

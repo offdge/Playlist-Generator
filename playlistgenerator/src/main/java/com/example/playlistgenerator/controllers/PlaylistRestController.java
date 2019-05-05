@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,8 +32,9 @@ public class PlaylistRestController {
     //    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @PostMapping("/createPlaylist")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity createPlaylistByGenre (@RequestBody PlaylistDto playlistDto) {
-        service.generatePlaylist(playlistDto);
+    public ResponseEntity createPlaylistByGenre (@RequestBody PlaylistDto playlistDto, Authentication authentication) {
+        String username = authentication.getName();
+        service.generatePlaylist(playlistDto, username);
         return new ResponseEntity(HttpStatus.OK);
     }
 

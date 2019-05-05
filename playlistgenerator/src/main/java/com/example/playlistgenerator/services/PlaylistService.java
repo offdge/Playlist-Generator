@@ -55,8 +55,9 @@ public class PlaylistService {
     }
 
 
-    public void generatePlaylist(PlaylistDto playlistDto) {
+    public void generatePlaylist(PlaylistDto playlistDto, String username) {
         Playlist playlist = new Playlist();
+        playlist.setUser(userRepository.findByUsername(username).get());
         playlist.setPlaylistTitle(playlistDto.getTitle());
 
         // to be replaced with real user using
