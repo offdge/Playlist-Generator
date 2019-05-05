@@ -83,4 +83,8 @@ public class PlaylistService {
     public Iterable<Playlist> getAllPlaylists() {
         return playlistRepository.findAll();
     }
+
+    public void removePlaylist(long id) {
+        playlistRepository.deleteById(id);
+    }
 }

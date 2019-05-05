@@ -42,4 +42,10 @@ public class PlaylistRestController {
     public Iterable<Playlist> getAllPlaylists() {
         return service.getAllPlaylists();
     }
+
+    @DeleteMapping("/deletePlaylist/{id}")
+    public ResponseEntity removePlaylist(@PathVariable long id) {
+        service.removePlaylist(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }
