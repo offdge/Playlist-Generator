@@ -152,18 +152,18 @@
                 <div>
                   <table id="playlistTable" class="beersTable display responsive nowrap" style="width: 100%">
                     <thead>
-                    <tr>
+                    <tr align="center">
                       <th>Playlist</th>
                       <th>Average rank</th>
-                      <th>Duration</th>
+                      <th>Duration (min)</th>
                       <th>Genres</th>
                     </tr>
                     </thead>
                     <tfoot>
-                    <tr>
+                    <tr align="center">
                       <th>Playlist</th>
                       <th>Average rank</th>
-                      <th>Duration</th>
+                      <th>Duration (min)</th>
                       <th>Genres</th>
                     </tr>
                     </tfoot>
@@ -191,66 +191,61 @@
               <div class="section-heading">
                 <h2>Create your playlist</h2>
                 <i class="fa fa-2x fa-angle-down"></i>
-                <form>
+
+                <form onsubmit="return validateForm()">
+
                   <div class="form-group row">
-                    <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
+                    <label for="inputOrigin" class="col-sm-2 col-form-label">From</label>
                     <div class="col-sm-10">
-                      <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+                      <input class="form-control" id="inputOrigin" placeholder="Origin">
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label for="inputPassword3" class="col-sm-2 col-form-label">Password</label>
+                    <label for="inputDestination" class="col-sm-2 col-form-label">To</label>
                     <div class="col-sm-10">
-                      <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+                      <input class="form-control" id="inputDestination" placeholder="Destination">
                     </div>
                   </div>
-                  <fieldset class="form-group">
-                    <div class="row">
-                      <legend class="col-form-label col-sm-2 pt-0">Radios</legend>
+                  <div class="form-group row">
+                    <label for="inputPlaylistName" class="col-sm-2 col-form-label">Playlist</label>
+                    <div class="col-sm-10">
+                      <input class="form-control" id="inputPlaylistName" placeholder="Name">
+                    </div>
+                  </div>
+                  <div>
+                    <div class="form-group row">
+                      <label for="inputGenreRock" class="col-sm-2 col-form-label">Rock</label>
                       <div class="col-sm-10">
-                        <div class="form-check">
-                          <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1" checked>
-                          <label class="form-check-label" for="gridRadios1">
-                            First radio
-                          </label>
-                        </div>
-                        <div class="form-check">
-                          <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2">
-                          <label class="form-check-label" for="gridRadios2">
-                            Second radio
-                          </label>
-                        </div>
-                        <div class="form-check disabled">
-                          <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios3" value="option3" disabled>
-                          <label class="form-check-label" for="gridRadios3">
-                            Third disabled radio
-                          </label>
-                        </div>
+                        <input class="form-control percentage" id="inputGenreRock" placeholder="%" maxlength='2'>
                       </div>
                     </div>
-                  </fieldset>
-                  <div class="form-group row">
-                    <div class="col-sm-2">Checkbox</div>
-                    <div class="col-sm-10">
-                      <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="gridCheck1">
-                        <label class="form-check-label" for="gridCheck1">
-                          Example checkbox
-                        </label>
+                    <div class="form-group row">
+                      <label for="inputGenrePop" class="col-sm-2 col-form-label">Pop</label>
+                      <div class="col-sm-10">
+                        <input class="form-control percentage" id="inputGenrePop" placeholder="%" maxlength='2'>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="inputGenreRap" class="col-sm-2 col-form-label">Rap / Hip-hop</label>
+                      <div class="col-sm-10">
+                        <input class="form-control percentage" id="inputGenreRap" placeholder="%" maxlength='2'>
                       </div>
                     </div>
                   </div>
-                  <div class="form-group row">
-                    <div class="col-sm-10">
-                      <button type="submit" class="btn btn-primary">Sign in</button>
+                  <div style="align-items: start" class="form-group row">
+                    <input class="checkboxx" type="checkbox" name="topRanked" value="topRanked"> use top ranked songs<br>
+                    <input class="checkboxx" type="checkbox" name="sameArtists" value="sameArtists"> allow tracks from same artists<br>
+                  </div>
+                  <div style="align-items: start" class="form-group row">
+                    <div style="width:800px; margin:0 auto;">
+                      <div class="form-group form-button">
+                        <input type="submit" name="generatePlaylist" id="generatePlaylist" class="form-submit" value="Generate playlist"/>
+                      </div>
                     </div>
                   </div>
                 </form>
-
                 <div>
-
                 </div>
-
               </div>
             </div>
           </div>
@@ -260,89 +255,6 @@
 
   </section>
   <!-- /Section: createPlaylist -->
-
-  <!-- Section: services -->
-  <section id="service" class="home-section text-center bg-gray">
-
-    <div class="heading-about">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-8 col-lg-offset-2">
-            <div class="wow bounceInDown" data-wow-delay="0.4s">
-              <div class="section-heading">
-                <h2>Our Services</h2>
-                <i class="fa fa-2x fa-angle-down"></i>
-
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-2 col-lg-offset-5">
-          <hr class="marginbot-50">
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-3">
-          <div class="wow fadeInLeft" data-wow-delay="0.2s">
-            <div class="service-box">
-              <div class="service-icon">
-                <img src="img/icons/service-icon-1.png" alt="" />
-              </div>
-              <div class="service-desc">
-                <h5>Print</h5>
-                <p>Vestibulum tincidunt enim in pharetra malesuada. Duis semper magna metus electram accommodare.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="wow fadeInUp" data-wow-delay="0.2s">
-            <div class="service-box">
-              <div class="service-icon">
-                <img src="img/icons/service-icon-2.png" alt="" />
-              </div>
-              <div class="service-desc">
-                <h5>Web Design</h5>
-                <p>Vestibulum tincidunt enim in pharetra malesuada. Duis semper magna metus electram accommodare.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="wow fadeInUp" data-wow-delay="0.2s">
-            <div class="service-box">
-              <div class="service-icon">
-                <img src="img/icons/service-icon-3.png" alt="" />
-              </div>
-              <div class="service-desc">
-                <h5>Photography</h5>
-                <p>Vestibulum tincidunt enim in pharetra malesuada. Duis semper magna metus electram accommodare.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="wow fadeInRight" data-wow-delay="0.2s">
-            <div class="service-box">
-              <div class="service-icon">
-                <img src="img/icons/service-icon-4.png" alt="" />
-              </div>
-              <div class="service-desc">
-                <h5>Cloud System</h5>
-                <p>Vestibulum tincidunt enim in pharetra malesuada. Duis semper magna metus electram accommodare.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-  <!-- /Section: services -->
-
 
   <!-- Login  Form -->
   <section id="login" class="login">
@@ -357,15 +269,11 @@
           <form class="register-form" id="login-form">
             <div class="form-group">
               <label for="your_name"><i class="zmdi zmdi-account material-icons-name"></i></label>
-              <input type="text" name="your_name" id="your_name" placeholder="Your Name"/>
+              <input type="text" name="your_name" id="your_name" placeholder="Username"/>
             </div>
             <div class="form-group">
               <label for="your_pass"><i class="zmdi zmdi-lock"></i></label>
               <input type="password" name="your_pass" id="your_pass" placeholder="Password"/>
-            </div>
-            <div class="form-group">
-              <input type="checkbox" name="remember-me" id="remember-me" class="agree-term" />
-              <label for="remember-me" class="label-agree-term"><span><span></span></span>Remember me</label>
             </div>
             <div class="form-group form-button">
               <input type="submit" name="signin" id="signin" class="form-submit" value="Log in"/>
@@ -388,25 +296,25 @@
           <h2 class="form-title">Sign up</h2>
           <form method="POST" class="register-form" id="register-form">
             <div class="form-group">
+              <label for="username"><i class="zmdi zmdi-account material-icons-name"></i></label>
+              <input type="text" name="username" id="username" placeholder="Username"/>
+            </div>
+            <div class="form-group">
               <label for="name"><i class="zmdi zmdi-account material-icons-name"></i></label>
-              <input type="text" name="name" id="name" placeholder="Your Name"/>
+              <input type="text" name="name" id="name" placeholder="Name"/>
             </div>
             <div class="form-group">
               <label for="email"><i class="zmdi zmdi-email"></i></label>
-              <input type="email" name="email" id="email" placeholder="Your Email"/>
+              <input type="text" name="email" id="email" placeholder="Email"/>
             </div>
             <div class="form-group">
               <label for="pass"><i class="zmdi zmdi-lock"></i></label>
               <input type="password" name="pass" id="pass" placeholder="Password"/>
             </div>
-            <div class="form-group">
-              <label for="re-pass"><i class="zmdi zmdi-lock-outline"></i></label>
-              <input type="password" name="re_pass" id="re_pass" placeholder="Repeat your password"/>
-            </div>
-            <div class="form-group">
-              <input type="checkbox" name="agree-term" id="agree-term" class="agree-term" />
-              <label for="agree-term" class="label-agree-term"><span><span></span></span>I agree all statements in  <a href="#" class="term-service">Terms of service</a></label>
-            </div>
+            <!--<div class="form-group">-->
+              <!--<input type="checkbox" name="agree-term" id="agree-term" class="agree-term" />-->
+              <!--<label for="agree-term" class="label-agree-term"><span><span></span></span>I agree all statements in  <a href="#" class="term-service">Terms of service</a></label>-->
+            <!--</div>-->
             <div class="form-group form-button">
               <input type="submit" name="signup" id="signup" class="form-submit" value="Register"/>
 

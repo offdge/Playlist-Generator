@@ -13,7 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Entity
+@Entity(name = "User")
 @Table(name = "users", uniqueConstraints = {
         @UniqueConstraint(columnNames = {
             "username"
@@ -25,7 +25,8 @@ import java.util.Set;
 public class User{
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "id")
+    private long id;
 
     @NotBlank
     @Size(min=3, max = 50)
