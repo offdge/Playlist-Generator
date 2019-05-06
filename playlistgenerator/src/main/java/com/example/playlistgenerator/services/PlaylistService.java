@@ -15,8 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -37,19 +36,35 @@ public class PlaylistService {
     @Autowired
     private UserRepository userRepository;
 
-    public Playlist createPlaylistByGenre(Genre genre, long duration) {
+    public Playlist createPlaylistByGenre(Genre genre, long duration, boolean repeatArtists, boolean useTopRankedSongs) {
+        Set<Long> artists = new HashSet<>();
         Playlist playlist = new Playlist();
         playlist.addGenre(genre);
         Iterable<Track> iterable = trackRepository.findAllByGenre(genre);
+
         List<Track> tracks = StreamSupport
                 .stream(iterable.spliterator(), false)
                 .collect(Collectors.toList());
-        Collections.shuffle(tracks);
+
+        if(useTopRankedSongs){
+            tracks.sort(Comparator.comparingDouble(Track::getRank)
+                    .reversed());
+        } else {
+            Collections.shuffle(tracks);
+        }
+
         for (Track track : tracks) {
             if (playlist.getPlaylistDuration() >= duration) {
                 break;
             }
-            playlist.getTracklist().add(track);
+            if(repeatArtists){
+                playlist.getTracklist().add(track);
+            } {
+                if (!artists.contains(track.getArtist().getId())){
+                    artists.add(track.getArtist().getId());
+                    playlist.getTracklist().add(track);
+                }
+            }
         }
         return playlist;
     }
@@ -67,7 +82,10 @@ public class PlaylistService {
             playlistDto.getGenres().forEach(genreDto -> {
                 Genre genre = genreRepository.findByName(genreDto.getName()).get();
                 Playlist genrePlaylist = createPlaylistByGenre(
-                        genre, (duration * genreDto.getPercentage() * 60) / 100);
+                        genre,
+                        (duration * genreDto.getPercentage() * 60) / 100,
+                        playlistDto.isAllowSameArtist(),
+                        playlistDto.isUseTopRanks());
                 playlist.addTracks(genrePlaylist.getTracklist());
                 if (genreDto.getPercentage() > 0) {
                     playlist.addGenre(genre);

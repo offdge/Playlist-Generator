@@ -124,6 +124,7 @@ $(document).ready(function () {
             headers: createAuthorizationTokenHeader(),
             success: function (data, textStatus, jqXHR) {
                 $('#playlistTable').DataTable().ajax.reload();
+                alert("Your playlist was successfully created!");
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 if (jqXHR.status === 401 || jqXHR.status === 403) {
