@@ -17,6 +17,22 @@ import java.util.List;
 @ControllerAdvice
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
+    @ExceptionHandler(PlaylistNotExistException.class)
+    public final ResponseEntity<Object> handlePlaylistNotExistException(PlaylistNotExistException ex, WebRequest request) {
+        List<String> details = new ArrayList<>();
+        details.add(ex.getLocalizedMessage());
+        ErrorResponse error = new ErrorResponse("Playlist deletion failed", details);
+        return new ResponseEntity(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PlaylistNameExistException.class)
+    public final ResponseEntity<Object> handlePlaylistNameExistException(PlaylistNameExistException ex, WebRequest request) {
+        List<String> details = new ArrayList<>();
+        details.add(ex.getLocalizedMessage());
+        ErrorResponse error = new ErrorResponse("Playlist creation failed", details);
+        return new ResponseEntity(error, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(LocationNotFoundException.class)
     public final ResponseEntity<Object> handleLocationNotFoundException(LocationNotFoundException ex, WebRequest request) {
         List<String> details = new ArrayList<>();

@@ -1,11 +1,11 @@
 package com.example.playlistgenerator.services;
 
-import com.example.playlistgenerator.dto.GenreDto;
 import com.example.playlistgenerator.dto.PlaylistDto;
+import com.example.playlistgenerator.exception.PlaylistNameExistException;
+import com.example.playlistgenerator.exception.PlaylistNotExistException;
 import com.example.playlistgenerator.models.Genre;
 import com.example.playlistgenerator.models.Playlist;
 import com.example.playlistgenerator.models.Track;
-import com.example.playlistgenerator.models.User;
 import com.example.playlistgenerator.repositories.GenreRepository;
 import com.example.playlistgenerator.repositories.PlaylistRepository;
 import com.example.playlistgenerator.repositories.TrackRepository;
@@ -35,7 +35,6 @@ public class PlaylistService {
     @Autowired
     private UserRepository userRepository;
 
-
     public Playlist createPlaylistByGenre(Genre genre, long duration) {
         Playlist playlist = new Playlist();
         playlist.addGenre(genre);
@@ -50,20 +49,20 @@ public class PlaylistService {
             }
             playlist.getTracklist().add(track);
         }
-
         return playlist;
     }
 
-
     public void generatePlaylist(PlaylistDto playlistDto, String username) {
-        Playlist playlist = new Playlist();
-        playlist.setUser(userRepository.findByUsername(username).get());
-        playlist.setPlaylistTitle(playlistDto.getTitle());
+        try {
+            Playlist playlist = new Playlist();
+            playlist.setUser(userRepository.findByUsername(username).get());
 
-        long duration = locationService.getTravelDuration(
-                playlistDto.getStartPoint(), playlistDto.getEndPoint());
+            playlist.setPlaylistTitle(playlistDto.getTitle());
 
-        playlistDto.getGenres().forEach(genreDto -> {
+            long duration = locationService.getTravelDuration(
+                    playlistDto.getStartPoint(), playlistDto.getEndPoint());
+
+            playlistDto.getGenres().forEach(genreDto -> {
                 Genre genre = genreRepository.findByName(genreDto.getName()).get();
                 Playlist genrePlaylist = createPlaylistByGenre(
                         genre, (duration * genreDto.getPercentage() * 60) / 100);
@@ -71,9 +70,12 @@ public class PlaylistService {
                 if (genreDto.getPercentage() > 0) {
                     playlist.addGenre(genre);
                 }
-        });
+            });
+            playlistRepository.save(playlist);
 
-        playlistRepository.save(playlist);
+        } catch (RuntimeException ex) {
+            throw new PlaylistNameExistException("Playlist name already exist");
+        }
     }
 
     public Iterable<Playlist> getAllPlaylists() {
@@ -81,6 +83,10 @@ public class PlaylistService {
     }
 
     public void removePlaylist(long id) {
-        playlistRepository.deleteById(id);
+        try {
+            playlistRepository.deleteById(id);
+        } catch (RuntimeException ex) {
+            throw new PlaylistNotExistException("Playlist not found");
+        }
     }
 }
