@@ -24,12 +24,6 @@ public class PlaylistRestController {
         this.service = service;
     }
 
-    //    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-//    @PostMapping("/createPlaylist/{genre}")
-//    public ResponseEntity createPlaylistByGenre (@PathVariable String genre) {
-//        service.createPlaylistByGenre(genre);
-//        return new ResponseEntity(HttpStatus.OK);
-//    }
 
     //    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @PostMapping("/createPlaylist")
@@ -48,7 +42,7 @@ public class PlaylistRestController {
     @DeleteMapping("/deletePlaylist/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity removePlaylist(@PathVariable long id, Authentication authentication) {
-        service.removePlaylist(id, authentication);
+        service.removePlaylist(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

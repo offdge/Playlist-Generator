@@ -1,6 +1,8 @@
 package com.example.playlistgenerator.services;
 
 import com.example.playlistgenerator.dto.PlaylistDto;
+import com.example.playlistgenerator.exception.PlaylistNameExistException;
+import com.example.playlistgenerator.exception.PlaylistNotExistException;
 import com.example.playlistgenerator.models.Genre;
 import com.example.playlistgenerator.models.Playlist;
 import com.example.playlistgenerator.models.Track;
@@ -12,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
@@ -20,7 +21,6 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Component
-@Service
 public class PlaylistService {
     @Autowired
     private PlaylistRepository playlistRepository;
@@ -37,7 +37,6 @@ public class PlaylistService {
     @Autowired
     private UserRepository userRepository;
 
-
     public Playlist createPlaylistByGenre(Genre genre, long duration) {
         Playlist playlist = new Playlist();
         playlist.addGenre(genre);
@@ -52,20 +51,20 @@ public class PlaylistService {
             }
             playlist.getTracklist().add(track);
         }
-
         return playlist;
     }
 
-
     public void generatePlaylist(PlaylistDto playlistDto, String username) {
-        Playlist playlist = new Playlist();
-        playlist.setUser(userRepository.findByUsername(username).get());
-        playlist.setPlaylistTitle(playlistDto.getTitle());
+        try {
+            Playlist playlist = new Playlist();
+            playlist.setUser(userRepository.findByUsername(username).get());
 
-        long duration = locationService.getTravelDuration(
-                playlistDto.getStartPoint(), playlistDto.getEndPoint());
+            playlist.setPlaylistTitle(playlistDto.getTitle());
 
-        playlistDto.getGenres().forEach(genreDto -> {
+            long duration = locationService.getTravelDuration(
+                    playlistDto.getStartPoint(), playlistDto.getEndPoint());
+
+            playlistDto.getGenres().forEach(genreDto -> {
                 Genre genre = genreRepository.findByName(genreDto.getName()).get();
                 Playlist genrePlaylist = createPlaylistByGenre(
                         genre, (duration * genreDto.getPercentage() * 60) / 100);
@@ -73,24 +72,24 @@ public class PlaylistService {
                 if (genreDto.getPercentage() > 0) {
                     playlist.addGenre(genre);
                 }
-        });
+            });
+            playlistRepository.save(playlist);
 
-        playlistRepository.save(playlist);
+        } catch (RuntimeException ex) {
+            throw new PlaylistNameExistException("Playlist name already exist");
+        }
     }
 
     public Iterable<Playlist> getAllPlaylists() {
         return playlistRepository.findAll();
     }
 
-    public void removePlaylist(long id, Authentication authentication) {
-        String playlistOwnerUsername = playlistRepository.findById(id).get().getUser().getUsername();
-        removePlaylist(id, playlistOwnerUsername, authentication.getName());
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    private void removePlaylist(long id, String username, String authenticatedUser){
-        playlistRepository.deleteById(id);
-
+    public void removePlaylist(long id) {
+        try {
+            playlistRepository.deleteById(id);
+        } catch (RuntimeException ex) {
+            throw new PlaylistNotExistException("Playlist not found");
+        }
     }
 
     public void updatePlaylist(Playlist playlist, String username) throws IllegalAccessException{

@@ -251,7 +251,7 @@ $(document).ready(function () {
                 url: "http://localhost:8080/playlist/getTracks/" + playlist_id,
                 dataSrc: "",
             },
-            order: [[ 5, "asc" ]],
+            order: [[ 4, "desc" ]],
             columns: [
                 {"data": 'title'},
                 {"data": 'genre.name'},

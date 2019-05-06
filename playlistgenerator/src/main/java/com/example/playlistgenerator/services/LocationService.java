@@ -50,19 +50,19 @@ public class LocationService {
                     List<JsonNode> results = rootNode.findValues("results");
                     results.get(0).forEach(jsonNode ->
                             travelDuration[0] = jsonNode.path("travelDuration").asLong());
-
                 } catch (IOException e) {
                     throw new LocationNotFoundException("Error during parsing the Json object");
                 }
             }
-        } catch (NoSuchFieldException e) {
+        }
+        catch (NoSuchFieldException e) {
             throw new LocationNotFoundException(e.getMessage());
         }
 
         return travelDuration[0];
     }
 
-    public String getCoordinatesAsString(String location) throws NoSuchFieldException {
+    private String getCoordinatesAsString(String location) throws NoSuchFieldException {
 
         String url = "http://dev.virtualearth.net/REST/v1/Locations/"
                 + location
@@ -94,13 +94,12 @@ public class LocationService {
                             jsonNode.path("coordinates").forEach(coordinate ->
                                     coordinates.add(coordinate.asText())));
                 }
-            } catch (IOException e) {
-                throw new LocationNotFoundException("Error during parsing the Json object");
+            } catch (IOException | IndexOutOfBoundsException e) {
+                throw new LocationNotFoundException("Location not valid");
             }
         }
-
-        if (coordinates.isEmpty()) {
-            throw new NoSuchFieldException("Failed to read the coordinates: " + location);
+        if(coordinates.isEmpty()){
+            throw new NoSuchFieldException("Coordinates not available fot location: " + location);
         }
         return String.join(",", coordinates);
     }
