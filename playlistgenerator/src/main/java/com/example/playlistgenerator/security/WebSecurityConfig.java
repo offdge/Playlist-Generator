@@ -61,6 +61,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/auth/**").permitAll()
                 .antMatchers("/playlist/getPlaylists").permitAll()
                 .antMatchers("/").permitAll()
+                .antMatchers("/distance/**").permitAll()
                 //.antMatchers("/playlist/createPlaylist/**").hasAnyRole("USER", "ADMIN")
                 .anyRequest().authenticated()
                 .and()
