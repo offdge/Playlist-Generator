@@ -1,10 +1,8 @@
 package com.example.playlistgenerator.services;
 
-import com.example.playlistgenerator.dto.GenreDto;
 import com.example.playlistgenerator.dto.PlaylistDto;
 import com.example.playlistgenerator.exception.PlaylistNotExistException;
 import com.example.playlistgenerator.models.Genre;
-import com.example.playlistgenerator.models.Playlist;
 import com.example.playlistgenerator.repositories.GenreRepository;
 import com.example.playlistgenerator.repositories.PlaylistRepository;
 import com.example.playlistgenerator.repositories.TrackRepository;
@@ -17,8 +15,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 
 import static org.mockito.Mockito.*;
 
@@ -69,7 +65,7 @@ public class PlaylistServiceTest {
 
     @Test
     public void testRemovePlaylist() throws PlaylistNotExistException {
-        playlistService.removePlaylist(0L);
+        playlistService.userDeletePlaylist(0L);
     }
 }
 

@@ -267,14 +267,11 @@ $(document).ready(function () {
         ajax: {
             edit: {
                 type: 'POST',
-                url: 'http://localhost:8080/playlist/updatePlaylist',
+                url: 'http://localhost:8080/playlist/userUpdatePlaylist',
                 contentType: "application/json",
                 dataType: 'html',
                 headers: createAuthorizationTokenHeader(),
                 "data": function (d) {
-                    console.log("editing");
-                    console.log(d);
-                    console.log(d.data);
                     return JSON.stringify(d.data[editor.field("id").val()]);
                 },
                 success: function () {
@@ -304,6 +301,31 @@ $(document).ready(function () {
             submit: 'allIfChanged'
         } );
     } );
+
+    $('#playlistTable').on( 'click', 'tbody td:nth-child(6)', function (e) {
+        doDeletePlaylist(this)
+    } );
+
+    function doDeletePlaylist(td) {
+        var tr = $(td).closest('tr');
+        var row = playlistTable.row( tr );
+        var data = row.data();
+
+        $.ajax({
+            url: "/playlist/userDeletePlaylist/" + data.id,
+            type: "DELETE",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            headers: createAuthorizationTokenHeader(),
+            success: function (data, textStatus, jqXHR) {
+                console.log("success");
+                $('#playlistTable').DataTable().ajax.reload();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log("error");
+            }
+        });
+    }
 
     var playlistTable = $('#playlistTable').DataTable({
         "responsive": true,

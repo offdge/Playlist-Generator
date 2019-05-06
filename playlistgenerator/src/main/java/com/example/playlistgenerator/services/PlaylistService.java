@@ -102,15 +102,17 @@ public class PlaylistService {
         return playlistRepository.findAll();
     }
 
-    public void removePlaylist(long id) {
-        try {
+    public void userDeletePlaylist(long id, String username) throws IllegalAccessException{
+        Playlist playlistToEdit = playlistRepository.findById(id).get();
+
+        if(playlistToEdit.getUser().getUsername().equals(username)){
             playlistRepository.deleteById(id);
-        } catch (RuntimeException ex) {
-            throw new PlaylistNotExistException("Playlist not found");
+        } else {
+            throw new IllegalAccessException("You cannot edit other users playlists.");
         }
     }
 
-    public void updatePlaylist(Playlist playlist, String username) throws IllegalAccessException{
+    public void userUpdatePlaylist(Playlist playlist, String username) throws IllegalAccessException{
         Playlist playlistToEdit = playlistRepository.findById(playlist.getId()).get();
         if(playlistToEdit.getUser().getUsername().equals(username)){
             playlistToEdit.setPlaylistTitle(playlist.getPlaylistTitle());
@@ -118,6 +120,16 @@ public class PlaylistService {
         } else {
             throw new IllegalAccessException("You cannot edit other users playlists.");
         }
+    }
+
+    public void adminDeletePlaylist(long id){
+        playlistRepository.deleteById(id);
+    }
+
+    public void adminUpdatePlaylist(Playlist playlist){
+        Playlist playlistToEdit = playlistRepository.findById(playlist.getId()).get();
+        playlistToEdit.setPlaylistTitle(playlist.getPlaylistTitle());
+        playlistRepository.save(playlistToEdit);
     }
 
     public Iterable<Track> getTracksForPlaylist(long playlistId) {
