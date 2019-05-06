@@ -16,13 +16,14 @@ import java.util.List;
 @SuppressWarnings({"unchecked", "rawtypes"})
 @ControllerAdvice
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
-//    @ExceptionHandler(Exception.class)
-//    public final ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest request) {
-//        List<String> details = new ArrayList<>();
-//        details.add(ex.getLocalizedMessage());
-//        ErrorResponse error = new ErrorResponse("Server Error", details);
-//        return new ResponseEntity(error, HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
+
+    @ExceptionHandler(LocationNotFoundException.class)
+    public final ResponseEntity<Object> handleLocationNotFoundException(LocationNotFoundException ex, WebRequest request) {
+        List<String> details = new ArrayList<>();
+        details.add(ex.getLocalizedMessage());
+        ErrorResponse error = new ErrorResponse("Location Not Found", details);
+        return new ResponseEntity(error, HttpStatus.NOT_FOUND);
+    }
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {

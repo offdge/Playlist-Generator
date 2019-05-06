@@ -1,5 +1,6 @@
 package com.example.playlistgenerator.services;
 
+import com.example.playlistgenerator.exception.LocationNotFoundException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,12 +51,12 @@ public class LocationService {
                     results.get(0).forEach(jsonNode ->
                             travelDuration[0] = jsonNode.path("travelDuration").asLong());
                 } catch (IOException e) {
-                    throw new IllegalArgumentException("Error during parsing the Json object");
+                    throw new LocationNotFoundException("Error during parsing the Json object");
                 }
             }
         }
         catch (NoSuchFieldException e) {
-            throw new IllegalArgumentException(e.getMessage());
+            throw new LocationNotFoundException(e.getMessage());
         }
 
         return travelDuration[0];
@@ -94,7 +95,7 @@ public class LocationService {
                                     coordinates.add(coordinate.asText())));
                 }
             } catch (IOException | IndexOutOfBoundsException e) {
-                throw new IllegalArgumentException("Location not valid");
+                throw new LocationNotFoundException("Location not valid");
             }
         }
         if(coordinates.isEmpty()){

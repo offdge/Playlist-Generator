@@ -23,10 +23,6 @@ public class LocationServiceController {
 
     @GetMapping("/{startPoint}/{endPoint}")
     public long getLocation(@PathVariable String startPoint, @PathVariable String endPoint) {
-        try {
             return service.getTravelDuration(startPoint, endPoint);
-        } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }
     }
 }
