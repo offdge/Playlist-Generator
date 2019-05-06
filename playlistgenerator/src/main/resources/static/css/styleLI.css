@@ -338,6 +338,14 @@ figure {
   display: block;
 }
 
+td.details-control {
+  background: url('../img/closed.png') no-repeat center center;
+  cursor: pointer;
+}
+tr.shown td.details-control {
+  background: url('../img/opened.png') no-repeat center center;
+}
+
 input {
   width: 100%;
   display: block;

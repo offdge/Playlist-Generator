@@ -22,7 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(
-        prePostEnabled = true
+        prePostEnabled = true, securedEnabled = true
 )
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
@@ -60,7 +60,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 authorizeRequests()
                 .antMatchers("/api/auth/**").permitAll()
                 .antMatchers("/playlist/getPlaylists").permitAll()
+                .antMatchers("/playlist/getTracks/**").permitAll()
                 .antMatchers("/").permitAll()
+                .antMatchers("/adminPanel").permitAll()
                 //.antMatchers("/playlist/createPlaylist/**").hasAnyRole("USER", "ADMIN")
                 .anyRequest().authenticated()
                 .and()
@@ -81,11 +83,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/favicon.ico",
                         "/**/*.html",
                         "/**/*.css",
+                        "/**/**/*.css",
                         "/**/*.js",
+                        "/**/**/*.js",
                         "/**/*.png",
                         "/**/*.jpg",
                         "/**/*.woff*",
-                        "/**/*.ttf"
+                        "/**/*.ttf",
+                        "/Editor-1.9.0/**/**/**"
                 )
 
                 // Un-secure H2 Database (for testing purposes, H2 console shouldn't be unprotected in production)

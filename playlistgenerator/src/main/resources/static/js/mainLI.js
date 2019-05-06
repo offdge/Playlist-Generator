@@ -1,44 +1,17 @@
 "use strict"
 $(document).ready(function () {
 
-   $('#playlistTable').DataTable({
-        dom: "Bfrtip",
-        "responsive": true,
-        "processing": true,
-        ajax: {
-            type: "GET",
-            contentType: "application/json",
-            dataType: "json",
-            url: "http://localhost:8080/playlist/getPlaylists",
-            dataSrc: "",
-        },
-        order: [[ 2, "asc" ]],
-        columns: [
-            {
-                "data": 'playlistTitle',
-                fnCreatedCell: function (nTd, cellData, rowData) {
-                    if (rowData.playlistTitle) {
-                        $(nTd).html("<span style='cursor:pointer; color: #67B0D1'>" + rowData.playlistTitle + "</span>")
-                    }
-
-                }
-            },
-            {"data": 'rating'},
-            {"data": 'playlistDurationMinutes'},
-            {"data": 'genresToString'},
-            // etc
-        ],
-        select: true
-    });
-
     // VARIABLES =============================================================
     var TOKEN_KEY = "jwtToken";
     var USER_NAME = "username";
+    var AUTHORITIES = "authorities";
     var $login = $("#login");
     var $signup = $("#signup");
     var $loginNav = $("#login-nav");
     var $signupNav = $("#signup-nav");
     var $logoutNav = $("#logout-nav");
+    var $adminNav = $("#admin-nav");
+    var $adminPanel = $("#admin-panel");
 
     // FUNCTIONS =============================================================
     function getJwtToken() {
@@ -47,17 +20,27 @@ $(document).ready(function () {
     function getUsername() {
         return localStorage.getItem(USER_NAME);
     }
-
-    function setJwtToken(token, username) {
-        console.log(token);
-        console.log(username);
-        localStorage.setItem(TOKEN_KEY, token);
-        localStorage.setItem(USER_NAME, username);
+    function getAuthorities() {
+        return localStorage.getItem(AUTHORITIES);
+    }
+    function isAdmin() {
+        if(localStorage.getItem(AUTHORITIES)){
+            return localStorage.getItem(AUTHORITIES).indexOf("ADMIN") !== -1;
+        } else {
+            return false;
+        }
     }
 
-    function removeJwtToken() {
+    function setLoginParameters(token, username, authorities) {
+        localStorage.setItem(TOKEN_KEY, token);
+        localStorage.setItem(USER_NAME, username);
+        localStorage.setItem(AUTHORITIES, authorities);
+    }
+
+    function removeLoginParameters() {
         localStorage.removeItem(TOKEN_KEY);
         localStorage.removeItem(USER_NAME);
+        localStorage.removeItem(AUTHORITIES);
     }
 
     function createAuthorizationTokenHeader() {
@@ -72,7 +55,6 @@ $(document).ready(function () {
     $("#logout-nav").click(doLogout);
 
     function doLogin(loginData) {
-        console.log(loginData);
         $.ajax({
             url: "/api/auth/signin",
             type: "POST",
@@ -80,8 +62,7 @@ $(document).ready(function () {
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (data, textStatus, jqXHR) {
-                console.log(data);
-                setJwtToken(data.accessToken, loginData.username);
+                setLoginParameters(data.accessToken, loginData.username, JSON.stringify(data.authorities));
                 $('#user-dropdown-toggle')
                     .html(loginData.username + " <b class=\"caret\">");
                 $login.hide();
@@ -89,6 +70,10 @@ $(document).ready(function () {
                 $signup.hide();
                 $signupNav.hide();
                 $logoutNav.show();
+                if(isAdmin()){
+                    $adminNav.show();
+                    $adminPanel.show();
+                }
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 if (jqXHR.status === 401 || jqXHR.status === 403) {
@@ -105,7 +90,6 @@ $(document).ready(function () {
     }
 
     function doSignup(signupData) {
-        console.log(signupData);
         $.ajax({
             url: "/api/auth/signup",
             type: "POST",
@@ -116,7 +100,6 @@ $(document).ready(function () {
                 doLogin(signupData);
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                console.log("asdasdasdasdasdasd");
                 if (jqXHR.status === 401 || jqXHR.status === 403) {
                     $('#loginErrorModal')
                         .modal("show")
@@ -132,7 +115,6 @@ $(document).ready(function () {
 
 
     function doCreatePlaylist(playlistData) {
-        console.log(playlistData);
         $.ajax({
             url: "/playlist/createPlaylist",
             type: "POST",
@@ -141,11 +123,9 @@ $(document).ready(function () {
             dataType: "json",
             headers: createAuthorizationTokenHeader(),
             success: function (data, textStatus, jqXHR) {
-                console.log("yeah");
                 $('#playlistTable').DataTable().ajax.reload();
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                console.log("asdasdasdasdasdasd");
                 if (jqXHR.status === 401 || jqXHR.status === 403) {
                     $('#loginErrorModal')
                         .modal("show")
@@ -160,7 +140,9 @@ $(document).ready(function () {
     }
 
     function doLogout() {
-        removeJwtToken();
+        removeLoginParameters();
+        $adminNav.hide();
+        $adminPanel.hide();
         $login.show();
         $loginNav.show();
         $signup.show();
@@ -230,6 +212,193 @@ $(document).ready(function () {
         doSignup(formData);
     });
 
+    function checkLength(){
+        var fieldValRock = document.getElementById('inputGenreRock').value;
+        var fieldValRap = document.getElementById('inputGenreRap').value;
+        var fieldValPop = document.getElementById('inputGenrePop').value;
+
+        if(+fieldValRock + +fieldValRap + +fieldValPop !== 100){
+            alert("The combined percentages must equal to 100");
+            return false;
+        }
+
+        return true;
+    }
+
+    // DATATABLES =============================================================
+    function format ( table_id ) {
+        console.log("format: " + table_id);
+        // `d` is the original data object for the row
+        return '<table cellpadding="5" cellspacing="0" id="'+table_id+'" class="display responsive nowrap"  style="width: 100%">'+
+            '<thead>'+
+            '<th>Track Title</th>'+
+            '<th>Genre</th>'+
+            '<th>Artist name</th>'+
+            '<th>Album name</th>'+
+            '<th>Rating</th>'+
+            '</thead>'+
+            '</table>';
+    }
+
+    function sub_DataTable(playlist_id, table_id) {
+        var subtable = $('#'+table_id).DataTable({
+            "responsive": true,
+            "processing": true,
+            ajax: {
+                type: "GET",
+                contentType: "application/json",
+                dataType: "json",
+                url: "http://localhost:8080/playlist/getTracks/" + playlist_id,
+                dataSrc: "",
+            },
+            order: [[ 5, "asc" ]],
+            columns: [
+                {"data": 'title'},
+                {"data": 'genre.name'},
+                {"data": 'artist.name'},
+                {"data": 'album.title'},
+                {"data": 'rank'}],
+            select: true
+        });
+    }
+
+    var editor = new $.fn.dataTable.Editor({
+        ajax: {
+            edit: {
+                type: 'POST',
+                url: 'http://localhost:8080/playlist/updatePlaylist',
+                contentType: "application/json",
+                dataType: 'html',
+                headers: createAuthorizationTokenHeader(),
+                "data": function (d) {
+                    console.log("editing");
+                    console.log(d);
+                    console.log(d.data);
+                    return JSON.stringify(d.data[editor.field("id").val()]);
+                },
+                success: function () {
+                    console.log("success");
+                    $('#playlistTable').DataTable().ajax.reload();
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log("error");
+                    alert(textStatus);
+                }
+            }
+        },
+        table: "#playlistTable",
+        idSrc: 'id',
+        dataSrc: "",
+        fields: [{
+            label: "playlist id:",
+            name: "id"
+        }, {
+            label: "Playlist title:",
+            name: "playlistTitle"
+        }]
+    });
+
+    $('#playlistTable').on( 'click', 'tbody td:nth-child(2)', function (e) {
+        editor.inline( this, {
+            submit: 'allIfChanged'
+        } );
+    } );
+
+    var playlistTable = $('#playlistTable').DataTable({
+        "responsive": true,
+        "processing": true,
+        ajax: {
+            type: "GET",
+            contentType: "application/json",
+            dataType: "json",
+            url: "http://localhost:8080/playlist/getPlaylists",
+            dataSrc: "",
+        },
+        order: [[ 3, "asc" ]],
+        columns: [
+            {
+                "className":      'details-control',
+                "orderable":      false,
+                "data":           null,
+                "defaultContent": ''
+            },
+            {
+                "data": 'playlistTitle',
+                editField: 'playlistTitle',
+                fnCreatedCell: function (nTd, cellData, rowData) {
+                    if (rowData.playlistTitle) {
+                        $(nTd).html("<span style='cursor:pointer; color: #67B0D1'>" + rowData.playlistTitle + "</span>")
+                    }
+
+                }
+            },
+            {"data": 'rating'},
+            {"data": 'playlistDurationMinutes'},
+            {"data": 'genresToString'},
+            {"data": null,
+                fnCreatedCell: function (nTd, cellData, rowData) {
+                    if (rowData.playlistTitle) {
+                        $(nTd).html("<span style='cursor:pointer; color: #b11f1f'>delete</span>")
+                    }
+
+                }}
+        ],
+        select: true
+    });
+
+    // Add event listener for opening and closing details
+    $('table#playlistTable tbody').on('click', 'td.details-control', function () {
+        var tr = $(this).closest('tr');
+        var row = playlistTable.row( tr );
+
+        if ( row.child.isShown() ) {
+            // This row is already open - close it
+            row.child.hide();
+            tr.removeClass('shown');
+        }
+        else {
+
+            // Open this row
+            var data = row.data();
+            var virtual_task_id = data.id;
+            var subtable_id = "subtable-"+virtual_task_id;
+            row.child(format(subtable_id)).show(); /* HERE I format the new table */
+            tr.addClass('shown');
+            sub_DataTable(virtual_task_id, subtable_id); /*HERE I was expecting to load data*/
+        }
+    });
+
+    var userTable = $('#userTable').DataTable({
+        dom: "Bfrtip",
+        "responsive": true,
+        "processing": true,
+        ajax: {
+            type: "GET",
+            contentType: "application/json",
+            dataType: "json",
+            url: "http://localhost:8080/getUsers",
+            dataSrc: "",
+            headers: createAuthorizationTokenHeader(),
+        },
+        // order: [[ 2, "asc" ]],
+        columns: [
+            {"data": 'email'},
+            {"data": 'name'},
+            {"data": 'username'},
+            {"data": null,
+                fnCreatedCell: function (nTd, cellData, rowData) {
+                    if (rowData.playlistTitle) {
+                        $(nTd).html("<span style='cursor:pointer; color: #b11f1f'>delete</span>")
+                    }
+
+                }}
+        ],
+        select: true,
+        buttons: [
+            {extend: "edit", editor: editor},
+        ]
+    });
+
     // INITIAL CALLS =============================================================
     if (getJwtToken()) {
         $login.hide();
@@ -245,17 +414,12 @@ $(document).ready(function () {
             .html("User <b class=\"caret\">");
     }
 
-
-    function checkLength(){
-        var fieldValRock = document.getElementById('inputGenreRock').value;
-        var fieldValRap = document.getElementById('inputGenreRap').value;
-        var fieldValPop = document.getElementById('inputGenrePop').value;
-
-        if(+fieldValRock + +fieldValRap + +fieldValPop !== 100){
-            alert("The combined percentages must equal to 100");
-            return false;
-        }
-
-        return true;
+    if (isAdmin()){
+        $adminNav.show();
+        $adminPanel.show();
+    } else {
+        $adminNav.hide();
+        $adminPanel.hide();
     }
+
 });
