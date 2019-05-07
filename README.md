@@ -1,10 +1,10 @@
 # Playlist Generator
-TripTones
+
 A playlist generator for tripoholics and music lovers
 
 ## Table of contents
 * [General info](#general-info)
-* [Screenshots](#screenshots)
+* [Home Page](#screenshots)
 * [Setup](#setup)
 * [Features](#features)
 * [Contact](#contact)
@@ -13,15 +13,15 @@ A playlist generator for tripoholics and music lovers
 
 Playlist Generator calculates the travel duration time between the starting and destination locations and combines tracks chosen randomly in the specified genres, until the playing time roughly matches the travel time duration.
 
-Public Part
+### Public Part
 The public part is visible without authentication. This includes the application start page, the user login and user registration forms, as well as the list of all user generated playlists. People that are not authenticated cannot see any user specific details, neither they can interact with the website. They can only browse the playlists and see the tracks list and details of them.
 
-Private Part (Users Only)
+### Private Part (Users Only)
 The private part is accessible only to users who have successfully authenticated (registered users).
 The private part of the web application provides the users the ability to generate new playlists, control the generation algorithm, edit or delete their own existing playlists.
 Editing existing playlists is limited to changing the title or associated genre tags, but does not include editing of the tracklist (e.g. removing or adding individual songs).
 
-Administration Part
+### Administration Part
 Users with the system administrator role can administer all major information objects. The administrators have the following functionality
 
 * CRUD over users and other administrators
@@ -38,19 +38,22 @@ Deezer External Service
 Deezer is an audio streaming service, which will help us search and gather the tracks needed for the playlist generation.
 Official doc: https://developers.deezer.com/login?redirect=/api
 
-## Screenshots
+## Home Page
 ![Example screenshot](./img/HomePage.png)
 
-## Setup
-Describe how to install / setup your local environement. 
 
 ## Features
 * Create Playlist
 ![Example screenshot](./img/UserCreatePlaylistDemo.gif)
 
+* Admin Panel and Delete Playlist
+![Example screenshot](./img/UserCreatePlaylistDemo.gif)
+
 
 ## Contact
-Created by bizzcuit and offdge.
+Created by Hrista Raleva and Georgi Dekov.
+
 https://www.telerikacademy.com/alpha/java
+
 Trello board: https://trello.com/b/2GUrfCVI/playlist-generatorrr
 
