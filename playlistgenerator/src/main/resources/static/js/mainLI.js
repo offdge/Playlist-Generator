@@ -134,6 +134,8 @@ $(document).ready(function () {
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 if (jqXHR.status === 401 || jqXHR.status === 403) {
+                    alert("Please log in/sign up in order to create a playlist.");
+
                     $('#loginErrorModal')
                         .modal("show")
                         .find(".modal-body")
@@ -141,8 +143,8 @@ $(document).ready(function () {
                         .html("<p>Message from server:<br>" + jqXHR.responseText + "</p>");
                 } else {
                     throw new Error("an unexpected error occured: " + errorThrown);
+                    alert("The playlist could not be created.");
                 }
-                alert("The playlist could not be created.");
             }
 
         });

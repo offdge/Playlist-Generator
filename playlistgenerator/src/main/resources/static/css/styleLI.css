@@ -622,4 +622,18 @@ label.valid {
   margin-bottom: 50px;
 }
 
+.bgimg {
+  background-image: url('../img/background3.jpg');
+  opacity: 0.79;
+}
+
+#topRanked #sameArtists {
+  font-weight: bold;
+}
+
+.wideTable {
+  margin-left: -120px;
+  margin-right: -120px;
+}
+
 /*# sourceMappingURL=style.css.map */
