@@ -1,8 +1,9 @@
 package com.example.playlistgenerator.services;
 
+import com.example.playlistgenerator.dto.GenreDto;
 import com.example.playlistgenerator.dto.PlaylistDto;
 import com.example.playlistgenerator.exception.PlaylistNotExistException;
-import com.example.playlistgenerator.models.Genre;
+import com.example.playlistgenerator.models.*;
 import com.example.playlistgenerator.repositories.GenreRepository;
 import com.example.playlistgenerator.repositories.PlaylistRepository;
 import com.example.playlistgenerator.repositories.TrackRepository;
@@ -15,6 +16,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.NoSuchElementException;
 
 import static org.mockito.Mockito.*;
 
@@ -37,12 +41,7 @@ public class PlaylistServiceTest {
         MockitoAnnotations.initMocks(this);
     }
 
-    @Test
-    public void testCreatePlaylistByGenre() throws Exception {
-        playlistService.createPlaylistByGenre(new Genre(), 0L);
-    }
-
-//    @Test
+    //    @Test
 //    public void testGeneratePlaylist() throws Exception {
 //        when(genreRepository.findByName(anyString())).thenReturn(null);
 //        when(trackRepository.findAllByGenre(any())).thenReturn(null);
@@ -52,8 +51,13 @@ public class PlaylistServiceTest {
 //        playlistService.generatePlaylist(new PlaylistDto("title", Arrays.<GenreDto>asList(new GenreDto("name", 0)), "startPoint", "endPoint", true, true), "username");
 //    }
 
+    @Test
+    public void testCreatePlaylistByGenre() throws RuntimeException {
+        playlistService.createPlaylistByGenre(new Genre(), 0L,true,true);
+    }
+
     @Test(expected = RuntimeException.class)
-    public void testGeneratePlaylist() {
+    public void testGeneratePlaylist(){
         playlistService.generatePlaylist(new PlaylistDto(), "username");
     }
 
@@ -63,9 +67,29 @@ public class PlaylistServiceTest {
         Assert.assertEquals(new ArrayList<>(), playlistService.getAllPlaylists());
     }
 
+    @Test(expected = RuntimeException.class)
+    public void testUserDeletePlaylist() throws IllegalAccessException {
+        playlistService.userDeletePlaylist(0L, "username");
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testUserUpdatePlaylist() throws Exception {
+        playlistService.userUpdatePlaylist(new Playlist(), "username");
+    }
+
     @Test
-    public void testRemovePlaylist() throws PlaylistNotExistException {
-        playlistService.userDeletePlaylist(0L);
+    public void testAdminDeletePlaylist() throws PlaylistNotExistException {
+        playlistService.adminDeletePlaylist(0L);
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testAdminUpdatePlaylist() {
+        playlistService.adminUpdatePlaylist(new Playlist());
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testGetTracksForPlaylist()  {
+        Iterable<Track> result = playlistService.getTracksForPlaylist(0L);
+        Assert.assertEquals(new ArrayList<>(), result);
     }
 }
-
