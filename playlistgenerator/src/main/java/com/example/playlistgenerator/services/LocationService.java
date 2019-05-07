@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import javax.validation.constraints.NotBlank;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,8 +55,7 @@ public class LocationService {
                     throw new LocationNotFoundException("Error during parsing the Json object");
                 }
             }
-        }
-        catch (NoSuchFieldException e) {
+        } catch (NoSuchFieldException e) {
             throw new LocationNotFoundException(e.getMessage());
         }
 
@@ -98,7 +98,7 @@ public class LocationService {
                 throw new LocationNotFoundException("Location not valid");
             }
         }
-        if(coordinates.isEmpty()){
+        if (coordinates.isEmpty()) {
             throw new NoSuchFieldException("Coordinates not available fot location: " + location);
         }
         return String.join(",", coordinates);
