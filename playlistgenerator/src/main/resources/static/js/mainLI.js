@@ -73,9 +73,13 @@ $(document).ready(function () {
                 if(isAdmin()){
                     $adminNav.show();
                     $adminPanel.show();
+                    alert("Welcome, admin!");
+                } else {
+                    alert("You have successfully logged in!");
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
+                alert("Your username or password is incorrect.");
                 if (jqXHR.status === 401 || jqXHR.status === 403) {
                     $('#loginErrorModal')
                         .modal("show")
@@ -98,8 +102,10 @@ $(document).ready(function () {
             dataType: "json",
             success: function (data, textStatus, jqXHR) {
                 doLogin(signupData);
+                alert ("You have successfully registered in TripTones! You can now start your own adventure! :)");
             },
             error: function (jqXHR, textStatus, errorThrown) {
+                // alert ("The username or email addressed you have entered is already taken. Please try with another one.");
                 if (jqXHR.status === 401 || jqXHR.status === 403) {
                     $('#loginErrorModal')
                         .modal("show")
@@ -136,7 +142,9 @@ $(document).ready(function () {
                 } else {
                     throw new Error("an unexpected error occured: " + errorThrown);
                 }
+                alert("The playlist could not be created.");
             }
+
         });
     }
 
@@ -391,8 +399,10 @@ $(document).ready(function () {
         }
     });
 
+
+    $.fn.dataTable.ext.errMode = 'throw';
+
     var userTable = $('#userTable').DataTable({
-        dom: "Bfrtip",
         "responsive": true,
         "processing": true,
         ajax: {
@@ -410,7 +420,7 @@ $(document).ready(function () {
             {"data": 'username'},
             {"data": null,
                 fnCreatedCell: function (nTd, cellData, rowData) {
-                    if (rowData.playlistTitle) {
+                    if (rowData.username) {
                         $(nTd).html("<span style='cursor:pointer; color: #b11f1f'>delete</span>")
                     }
 
@@ -421,6 +431,152 @@ $(document).ready(function () {
             {extend: "edit", editor: editor},
         ]
     });
+
+    var editorUser = new $.fn.dataTable.Editor({
+        ajax: {
+            edit: {
+                type: 'POST',
+                url: 'http://localhost:8080/playlist/adminUpdateUser',
+                contentType: "application/json",
+                dataType: 'html',
+                headers: createAuthorizationTokenHeader(),
+                "data": function (d) {
+                    return JSON.stringify(d.data[editorUser.field("id").val()]);
+                },
+                success: function () {
+                    console.log("success");
+                    $('#userTable').DataTable().ajax.reload();
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log("error");
+                    alert(textStatus);
+                }
+            }
+        },
+        table: "#userTable",
+        idSrc: 'id',
+        dataSrc: "",
+        fields: [{
+            label: "user id:",
+            name: "id"
+        }, {
+            label: "email:",
+            name: "email"
+        }]
+    });
+
+
+    $('#userTable').on( 'click', 'tbody td:nth-child(1)', function (e) {
+        editorUser.inline( this, {
+            submit: 'allIfChanged'
+        } );
+    } );
+
+
+
+
+    var adminPlaylistTable = $('#adminPlaylistTable').DataTable({
+        "responsive": true,
+        "processing": true,
+        ajax: {
+            type: "GET",
+            contentType: "application/json",
+            dataType: "json",
+            url: "http://localhost:8080/playlist/getPlaylists",
+            dataSrc: "",
+        },
+        order: [[ 3, "asc" ]],
+        columns: [
+            {
+                "data": 'playlistTitle',
+                editField: 'playlistTitle',
+                fnCreatedCell: function (nTd, cellData, rowData) {
+                    if (rowData.playlistTitle) {
+                        $(nTd).html("<span style='cursor:pointer; color: #67B0D1'>" + rowData.playlistTitle + "</span>")
+                    }
+
+                }
+            },
+            {"data": 'rating'},
+            {"data": 'playlistDurationMinutes'},
+            {"data": 'genresToString'},
+            {"data": null,
+                fnCreatedCell: function (nTd, cellData, rowData) {
+                    if (rowData.playlistTitle) {
+                        $(nTd).html("<span style='cursor:pointer; color: #b11f1f'>delete</span>")
+                    }
+
+                }}
+        ],
+        select: true
+    });
+
+    $('#adminPlaylistTable').on( 'click', 'tbody td:nth-child(5)', function (e) {
+        doAdminDeletePlaylist(this)
+    } );
+
+    function doAdminDeletePlaylist(td) {
+        var tr = $(td).closest('tr');
+        var row = adminPlaylistTable.row( tr );
+        var data = row.data();
+
+        $.ajax({
+            url: "/playlist/adminDeletePlaylist/" + data.id,
+            type: "DELETE",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            headers: createAuthorizationTokenHeader(),
+            success: function (data, textStatus, jqXHR) {
+                console.log("success");
+                $('#playlistTable').DataTable().ajax.reload();
+                $('#adminPlaylistTable').DataTable().ajax.reload();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log("error");
+            }
+        });
+    }
+
+    var editorAdmin = new $.fn.dataTable.Editor({
+        ajax: {
+            edit: {
+                type: 'POST',
+                url: 'http://localhost:8080/playlist/adminUpdatePlaylist',
+                contentType: "application/json",
+                dataType: 'html',
+                headers: createAuthorizationTokenHeader(),
+                "data": function (d) {
+                    return JSON.stringify(d.data[editorAdmin.field("id").val()]);
+                },
+                success: function () {
+                    console.log("success");
+                    $('#playlistTable').DataTable().ajax.reload();
+                    $('#adminPlaylistTable').DataTable().ajax.reload();
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log("error");
+                    alert(textStatus);
+                }
+            }
+        },
+        table: "#adminPlaylistTable",
+        idSrc: 'id',
+        dataSrc: "",
+        fields: [{
+            label: "playlist id:",
+            name: "id"
+        }, {
+            label: "Playlist title:",
+            name: "playlistTitle"
+        }]
+    });
+
+
+    $('#adminPlaylistTable').on( 'click', 'tbody td:nth-child(1)', function (e) {
+        editorAdmin.inline( this, {
+            submit: 'allIfChanged'
+        } );
+    } );
 
     // INITIAL CALLS =============================================================
     if (getJwtToken()) {

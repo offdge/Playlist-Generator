@@ -16,4 +16,10 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public void adminUpdateUsers(User user){
+        User userToEdit = userRepository.findById(user.getId()).get();
+        userToEdit.setEmail(user.getEmail());
+        userRepository.save(userToEdit);
+    }
+
 }
