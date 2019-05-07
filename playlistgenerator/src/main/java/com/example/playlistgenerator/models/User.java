@@ -36,7 +36,6 @@ public class User{
     @Size(min=3, max = 50)
     private String username;
 
-    @NaturalId
     @NotBlank
     @Size(max = 50)
     @Email
@@ -46,11 +45,11 @@ public class User{
     @Size(min=6, max = 100)
     private String password;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany
+    @LazyCollection(LazyCollectionOption.FALSE)
     @JoinTable(name = "user_roles",
     	joinColumns = @JoinColumn(name = "user_id"),
     	inverseJoinColumns = @JoinColumn(name = "role_id"))
-    @JsonIgnore
     private Set<Role> roles = new HashSet<>();
 
     @OneToMany(targetEntity = Playlist.class, mappedBy = "user")
@@ -112,5 +111,15 @@ public class User{
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public boolean isAdmin(){
+        for (Role role: roles) {
+            if (role.getName().toString().equals("ROLE_ADMIN")) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -636,4 +636,11 @@ label.valid {
   margin-right: -120px;
 }
 
+.deleteImage{
+  background-image: url('../img/delete.png');
+  background-repeat: no-repeat;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
 /*# sourceMappingURL=style.css.map */

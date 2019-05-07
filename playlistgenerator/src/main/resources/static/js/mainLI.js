@@ -119,7 +119,6 @@ $(document).ready(function () {
         });
     }
 
-
     function doCreatePlaylist(playlistData) {
         $.ajax({
             url: "/playlist/createPlaylist",
@@ -130,6 +129,7 @@ $(document).ready(function () {
             headers: createAuthorizationTokenHeader(),
             success: function (data, textStatus, jqXHR) {
                 $('#playlistTable').DataTable().ajax.reload();
+                $('#playlist-form')[0].reset();
                 alert("Your playlist was successfully created!");
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -165,7 +165,6 @@ $(document).ready(function () {
 
     // REGISTER EVENT LISTENERS =============================================================
 
-
     $("#playlist-form").submit(function (event) {
         event.preventDefault();
 
@@ -195,7 +194,6 @@ $(document).ready(function () {
 
         doCreatePlaylist(formData);
     });
-
 
     $("#login-form").submit(function (event) {
         event.preventDefault();
@@ -368,6 +366,7 @@ $(document).ready(function () {
             {"data": 'rating'},
             {"data": 'playlistDurationMinutes'},
             {"data": 'genresToString'},
+            {"data": 'user.username'},
             {"data": null,
                 fnCreatedCell: function (nTd, cellData, rowData) {
                     if (rowData.playlistTitle) {
@@ -401,7 +400,6 @@ $(document).ready(function () {
         }
     });
 
-
     $.fn.dataTable.ext.errMode = 'throw';
 
     var userTable = $('#userTable').DataTable({
@@ -422,6 +420,16 @@ $(document).ready(function () {
             {"data": 'username'},
             {"data": null,
                 fnCreatedCell: function (nTd, cellData, rowData) {
+                    console.log(rowData);
+                if(rowData.admin){
+                    $(nTd).html("<span class='removeadmin' style='cursor:pointer; color: #b11f1f'>remove admin</span>")
+                } else {
+                    $(nTd).html("<span class='makeadmin' style='cursor:pointer; color: #b11f1f'>make admin</span>")
+                }
+
+                }},
+            {"data": null,
+                fnCreatedCell: function (nTd, cellData, rowData) {
                     if (rowData.username) {
                         $(nTd).html("<span style='cursor:pointer; color: #b11f1f'>delete</span>")
                     }
@@ -438,7 +446,7 @@ $(document).ready(function () {
         ajax: {
             edit: {
                 type: 'POST',
-                url: 'http://localhost:8080/playlist/adminUpdateUser',
+                url: 'http://localhost:8080/adminUpdateUser',
                 contentType: "application/json",
                 dataType: 'html',
                 headers: createAuthorizationTokenHeader(),
@@ -467,15 +475,86 @@ $(document).ready(function () {
         }]
     });
 
-
-    $('#userTable').on( 'click', 'tbody td:nth-child(1)', function (e) {
+    $('#userTable').on( 'click', 'tbody td:first-child', function (e) {
         editorUser.inline( this, {
             submit: 'allIfChanged'
         } );
     } );
 
+    $('#userTable').on( 'click', 'tbody td:nth-child(5)', function (e) {
+        doDeleteUser(this)
+    } );
 
+    $('#userTable').on( 'click', 'tbody td span.makeadmin', function (e) {
+        makeAdmin(this)
+    } );
 
+    $('#userTable').on( 'click', 'tbody td span.removeadmin', function (e) {
+        removeAdmin(this)
+    } );
+
+    function doDeleteUser(td) {
+        var tr = $(td).closest('tr');
+        var row = userTable.row( tr );
+        var data = row.data();
+
+        $.ajax({
+            url: "/adminDeleteUser/" + data.id,
+            type: "DELETE",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            headers: createAuthorizationTokenHeader(),
+            success: function (data, textStatus, jqXHR) {
+                console.log("success");
+                $('#userTable').DataTable().ajax.reload();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log("error");
+            }
+        });
+    }
+
+    function makeAdmin(td) {
+        var tr = $(td).closest('tr');
+        var row = userTable.row( tr );
+        var data = row.data();
+
+        $.ajax({
+            url: "/makeAdmin/" + data.id,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            headers: createAuthorizationTokenHeader(),
+            success: function (data, textStatus, jqXHR) {
+                console.log("success");
+                $('#userTable').DataTable().ajax.reload();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log("error");
+            }
+        });
+    }
+
+    function removeAdmin(td) {
+        var tr = $(td).closest('tr');
+        var row = userTable.row( tr );
+        var data = row.data();
+
+        $.ajax({
+            url: "/removeAdmin/" + data.id,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            headers: createAuthorizationTokenHeader(),
+            success: function (data, textStatus, jqXHR) {
+                console.log("success");
+                $('#userTable').DataTable().ajax.reload();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log("error");
+            }
+        });
+    }
 
     var adminPlaylistTable = $('#adminPlaylistTable').DataTable({
         "responsive": true,
@@ -573,7 +652,6 @@ $(document).ready(function () {
         }]
     });
 
-
     $('#adminPlaylistTable').on( 'click', 'tbody td:nth-child(1)', function (e) {
         editorAdmin.inline( this, {
             submit: 'allIfChanged'
@@ -604,3 +682,4 @@ $(document).ready(function () {
     }
 
 });
+
