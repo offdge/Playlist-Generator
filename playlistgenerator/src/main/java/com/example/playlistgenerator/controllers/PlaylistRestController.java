@@ -22,7 +22,6 @@ public class PlaylistRestController {
     }
 
 
-    //    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @PostMapping("/createPlaylist")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity createPlaylistByGenre (@RequestBody PlaylistDto playlistDto, Authentication authentication) {
