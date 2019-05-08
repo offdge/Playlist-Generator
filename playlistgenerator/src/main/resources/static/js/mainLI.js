@@ -251,6 +251,7 @@ $(document).ready(function () {
         // `d` is the original data object for the row
         return '<table cellpadding="5" cellspacing="0" id="'+table_id+'" class="display responsive nowrap"  style="width: 100%">'+
             '<thead>'+
+            '<th>Preview</th>'+
             '<th>Track Title</th>'+
             '<th>Genre</th>'+
             '<th>Artist name</th>'+
@@ -258,6 +259,16 @@ $(document).ready(function () {
             '<th>Rating</th>'+
             '</thead>'+
             '</table>';
+    }
+
+    function playPause (data) {
+        var audio = data.firstChild;
+
+        if (audio.paused) {
+            audio.play();
+        } else {
+            audio.pause();
+        }
     }
 
     function sub_DataTable(playlist_id, table_id) {
@@ -271,8 +282,16 @@ $(document).ready(function () {
                 url: "/playlist/getTracks/" + playlist_id,
                 dataSrc: "",
             },
-            order: [[ 4, "desc" ]],
+            order: [[ 5, "desc" ]],
             columns: [
+                {"data": null,
+                    editField: 'preview',
+                    fnCreatedCell: function (nTd, cellData, rowData) {
+                        $(nTd).html("<a><audio src='" + rowData.preview + "'></audio>" +
+                            "<img style='height: 8%' src='https://lh3.googleusercontent.com/JqLN64fZj4nNQ4R98drSE68RKMBNfY2ZvfZylqlFY-oPwSCxIKUmPO4nL0A_V0-pEBM4'></a>");
+
+                    }
+                },
                 {"data": 'title'},
                 {"data": 'genre.name'},
                 {"data": 'artist.name'},
@@ -280,8 +299,13 @@ $(document).ready(function () {
                 {"data": 'rank'}],
             select: true
         });
-    }
 
+        $('#' + table_id).on( 'click', 'tbody a', function (e) {
+            playPause(this);
+        } );
+
+
+    }
     var editor = new $.fn.dataTable.Editor({
         ajax: {
             edit: {
