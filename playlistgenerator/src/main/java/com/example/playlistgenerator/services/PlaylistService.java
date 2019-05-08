@@ -2,7 +2,6 @@ package com.example.playlistgenerator.services;
 
 import com.example.playlistgenerator.dto.PlaylistDto;
 import com.example.playlistgenerator.exception.PlaylistNameExistException;
-import com.example.playlistgenerator.exception.PlaylistNotExistException;
 import com.example.playlistgenerator.models.Genre;
 import com.example.playlistgenerator.models.Playlist;
 import com.example.playlistgenerator.models.Track;
@@ -11,8 +10,6 @@ import com.example.playlistgenerator.repositories.PlaylistRepository;
 import com.example.playlistgenerator.repositories.TrackRepository;
 import com.example.playlistgenerator.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -21,20 +18,26 @@ import java.util.stream.StreamSupport;
 
 @Component
 public class PlaylistService {
-    @Autowired
+
     private PlaylistRepository playlistRepository;
 
-    @Autowired
     private GenreRepository genreRepository;
 
-    @Autowired
     private TrackRepository trackRepository;
 
-    @Autowired
     private LocationService locationService;
 
-    @Autowired
     private UserRepository userRepository;
+
+
+    @Autowired
+    public PlaylistService(PlaylistRepository playlistRepository, GenreRepository genreRepository, TrackRepository trackRepository, LocationService locationService, UserRepository userRepository) {
+        this.playlistRepository = playlistRepository;
+        this.genreRepository=genreRepository;
+        this.trackRepository=trackRepository;
+        this.locationService=locationService;
+        this.userRepository=userRepository;
+    }
 
     public Playlist createPlaylistByGenre(Genre genre, long duration, boolean repeatArtists, boolean useTopRankedSongs) {
         Set<Long> artists = new HashSet<>();
@@ -46,7 +49,7 @@ public class PlaylistService {
                 .stream(iterable.spliterator(), false)
                 .collect(Collectors.toList());
 
-        if(useTopRankedSongs){
+        if (useTopRankedSongs) {
             tracks.sort(Comparator.comparingDouble(Track::getRank)
                     .reversed());
         } else {
@@ -57,10 +60,11 @@ public class PlaylistService {
             if (playlist.getPlaylistDuration() >= duration) {
                 break;
             }
-            if(repeatArtists){
+            if (repeatArtists) {
                 playlist.getTracklist().add(track);
-            } {
-                if (!artists.contains(track.getArtist().getId())){
+            }
+            {
+                if (!artists.contains(track.getArtist().getId())) {
                     artists.add(track.getArtist().getId());
                     playlist.getTracklist().add(track);
                 }
@@ -102,19 +106,19 @@ public class PlaylistService {
         return playlistRepository.findAll();
     }
 
-    public void userDeletePlaylist(long id, String username) throws IllegalAccessException{
+    public void userDeletePlaylist(long id, String username) throws IllegalAccessException {
         Playlist playlistToEdit = playlistRepository.findById(id).get();
 
-        if(playlistToEdit.getUser().getUsername().equals(username)){
+        if (playlistToEdit.getUser().getUsername().equals(username)) {
             playlistRepository.deleteById(id);
         } else {
             throw new IllegalAccessException("You cannot edit other users playlists.");
         }
     }
 
-    public void userUpdatePlaylist(Playlist playlist, String username) throws IllegalAccessException{
+    public void userUpdatePlaylist(Playlist playlist, String username) throws IllegalAccessException {
         Playlist playlistToEdit = playlistRepository.findById(playlist.getId()).get();
-        if(playlistToEdit.getUser().getUsername().equals(username)){
+        if (playlistToEdit.getUser().getUsername().equals(username)) {
             playlistToEdit.setPlaylistTitle(playlist.getPlaylistTitle());
             playlistRepository.save(playlistToEdit);
         } else {
@@ -122,11 +126,11 @@ public class PlaylistService {
         }
     }
 
-    public void adminDeletePlaylist(long id){
+    public void adminDeletePlaylist(long id) {
         playlistRepository.deleteById(id);
     }
 
-    public void adminUpdatePlaylist(Playlist playlist){
+    public void adminUpdatePlaylist(Playlist playlist) {
         Playlist playlistToEdit = playlistRepository.findById(playlist.getId()).get();
         playlistToEdit.setPlaylistTitle(playlist.getPlaylistTitle());
         playlistRepository.save(playlistToEdit);
