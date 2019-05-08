@@ -9,6 +9,8 @@ import com.example.playlistgenerator.repositories.GenreRepository;
 import com.example.playlistgenerator.repositories.PlaylistRepository;
 import com.example.playlistgenerator.repositories.TrackRepository;
 import com.example.playlistgenerator.repositories.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +20,8 @@ import java.util.stream.StreamSupport;
 
 @Component
 public class PlaylistService {
+
+    private static final Logger logger = LoggerFactory.getLogger(PlaylistService.class);
 
     private PlaylistRepository playlistRepository;
 
@@ -97,7 +101,8 @@ public class PlaylistService {
             });
             playlistRepository.save(playlist);
 
-        } catch (RuntimeException ex) {
+        } catch (RuntimeException e) {
+            logger.error(e.getMessage());
             throw new PlaylistNameExistException("Playlist name already exists");
         }
     }

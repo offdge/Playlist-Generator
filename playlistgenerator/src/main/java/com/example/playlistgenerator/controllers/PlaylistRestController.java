@@ -3,7 +3,10 @@ package com.example.playlistgenerator.controllers;
 import com.example.playlistgenerator.dto.PlaylistDto;
 import com.example.playlistgenerator.models.Playlist;
 import com.example.playlistgenerator.models.Track;
+import com.example.playlistgenerator.security.jwt.JwtAuthEntryPoint;
 import com.example.playlistgenerator.services.PlaylistService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +18,9 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/playlist")
 public class PlaylistRestController {
+
+    private static final Logger logger = LoggerFactory.getLogger(JwtAuthEntryPoint.class);
+
     private PlaylistService service;
 
     @Autowired
@@ -42,6 +48,7 @@ public class PlaylistRestController {
         try{
             service.userDeletePlaylist(id, authentication.getName());
         } catch (IllegalAccessException e) {
+            logger.error(e.getMessage());
             return new ResponseEntity(HttpStatus.CONFLICT);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -53,6 +60,7 @@ public class PlaylistRestController {
         try{
             service.userUpdatePlaylist(playlist, authentication.getName());
         } catch (IllegalAccessException e) {
+            logger.error(e.getMessage());
             return new ResponseEntity(HttpStatus.CONFLICT);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -71,7 +79,6 @@ public class PlaylistRestController {
         service.adminUpdatePlaylist(playlist);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
 
     @GetMapping("/getTracks/{playlistId}")
     public Iterable<Track> getTracks(@PathVariable long playlistId) {

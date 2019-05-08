@@ -3,19 +3,22 @@ package com.example.playlistgenerator.services;
 import com.example.playlistgenerator.exception.LocationNotFoundException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import javax.validation.constraints.NotBlank;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class LocationService {
+
+    private static final Logger logger = LoggerFactory.getLogger(LocationService.class);
 
     private static final String API_KEY = "Apje4EpG8MDdJIUPhxKVpsu_DBQuyJQQ6zKBvULftlYaVTDrGm5OqAtM6vJrjKCy";
 
@@ -52,10 +55,12 @@ public class LocationService {
                     results.get(0).forEach(jsonNode ->
                             travelDuration[0] = jsonNode.path("travelDuration").asLong());
                 } catch (IOException e) {
+                    logger.error(e.getMessage());
                     throw new LocationNotFoundException("Error during parsing the Json object");
                 }
             }
         } catch (NoSuchFieldException e) {
+            logger.error(e.getMessage());
             throw new LocationNotFoundException(e.getMessage());
         }
 
@@ -95,6 +100,7 @@ public class LocationService {
                                     coordinates.add(coordinate.asText())));
                 }
             } catch (IOException | IndexOutOfBoundsException e) {
+                logger.error(e.getMessage());
                 throw new LocationNotFoundException("Location not valid");
             }
         }
