@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -40,14 +39,14 @@ public class UserRestController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/makeAdmin/{id}")
-    public ResponseEntity makeAdmin(@PathVariable long id){
+    public ResponseEntity makeAdmin(@PathVariable long id) {
         service.makeAdmin(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/removeAdmin/{id}")
-    public ResponseEntity removeAdmin(@PathVariable long id){
+    public ResponseEntity removeAdmin(@PathVariable long id) {
         service.removeAdmin(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

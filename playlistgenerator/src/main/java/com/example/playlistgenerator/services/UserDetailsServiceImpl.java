@@ -1,8 +1,8 @@
 package com.example.playlistgenerator.services;
 
 import com.example.playlistgenerator.models.User;
-import com.example.playlistgenerator.repositories.UserRepository;
 import com.example.playlistgenerator.models.UserPrinciple;
+import com.example.playlistgenerator.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,8 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
+    private UserRepository userRepository;
+
     @Autowired
-    UserRepository userRepository;
+    public UserDetailsServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     @Transactional
