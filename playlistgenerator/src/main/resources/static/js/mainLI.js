@@ -73,6 +73,7 @@ $(document).ready(function () {
                 if(isAdmin()){
                     $adminNav.show();
                     $adminPanel.show();
+                    location.reload();
                     alert("Welcome, admin!");
                 } else {
                     alert("You have successfully logged in!");
@@ -130,11 +131,21 @@ $(document).ready(function () {
             success: function (data, textStatus, jqXHR) {
                 $('#playlistTable').DataTable().ajax.reload();
                 $('#playlist-form')[0].reset();
+                location.reload();
                 alert("Your playlist was successfully created!");
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 if (jqXHR.status === 401 || jqXHR.status === 403) {
                     alert("Please log in/sign up in order to create a playlist.");
+
+                    $('#loginErrorModal')
+                        .modal("show")
+                        .find(".modal-body")
+                        .empty()
+                        .html("<p>Message from server:<br>" + jqXHR.responseText + "</p>");
+                }
+                if (jqXHR.status === 400) {
+                    alert("Playlist cannot be created. Wrong input.");
 
                     $('#loginErrorModal')
                         .modal("show")
@@ -257,7 +268,7 @@ $(document).ready(function () {
                 type: "GET",
                 contentType: "application/json",
                 dataType: "json",
-                url: "http://localhost:8080/playlist/getTracks/" + playlist_id,
+                url: "/playlist/getTracks/" + playlist_id,
                 dataSrc: "",
             },
             order: [[ 4, "desc" ]],
@@ -275,7 +286,7 @@ $(document).ready(function () {
         ajax: {
             edit: {
                 type: 'POST',
-                url: 'http://localhost:8080/playlist/userUpdatePlaylist',
+                url: '/playlist/userUpdatePlaylist',
                 contentType: "application/json",
                 dataType: 'html',
                 headers: createAuthorizationTokenHeader(),
@@ -344,7 +355,7 @@ $(document).ready(function () {
             type: "GET",
             contentType: "application/json",
             dataType: "json",
-            url: "http://localhost:8080/playlist/getPlaylists",
+            url: "/playlist/getPlaylists",
             dataSrc: "",
         },
         order: [[ 2, "desc" ]],
@@ -411,7 +422,7 @@ $(document).ready(function () {
             type: "GET",
             contentType: "application/json",
             dataType: "json",
-            url: "http://localhost:8080/getUsers",
+            url: "/getUsers",
             dataSrc: "",
             headers: createAuthorizationTokenHeader(),
         },
@@ -448,7 +459,7 @@ $(document).ready(function () {
         ajax: {
             edit: {
                 type: 'POST',
-                url: 'http://localhost:8080/adminUpdateUser',
+                url: '/adminUpdateUser',
                 contentType: "application/json",
                 dataType: 'html',
                 headers: createAuthorizationTokenHeader(),
@@ -565,7 +576,7 @@ $(document).ready(function () {
             type: "GET",
             contentType: "application/json",
             dataType: "json",
-            url: "http://localhost:8080/playlist/getPlaylists",
+            url: "/playlist/getPlaylists",
             dataSrc: "",
         },
         order: [[ 1, "desc" ]],
@@ -624,7 +635,7 @@ $(document).ready(function () {
         ajax: {
             edit: {
                 type: 'POST',
-                url: 'http://localhost:8080/playlist/adminUpdatePlaylist',
+                url: '/playlist/adminUpdatePlaylist',
                 contentType: "application/json",
                 dataType: 'html',
                 headers: createAuthorizationTokenHeader(),
