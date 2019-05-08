@@ -288,7 +288,8 @@ $(document).ready(function () {
                 },
                 error: function (xhr, textStatus, errorThrown) {
                     console.log("error");
-                    alert(textStatus);
+                    // alert(textStatus);
+                    alert("You don't have permission to update playlists created by others.");
                 }
             }
         },
@@ -310,7 +311,7 @@ $(document).ready(function () {
         } );
     } );
 
-    $('#playlistTable').on( 'click', 'tbody td:nth-child(6)', function (e) {
+    $('#playlistTable').on( 'click', 'tbody td:nth-child(7)', function (e) {
         doDeletePlaylist(this)
     } );
 
@@ -331,6 +332,7 @@ $(document).ready(function () {
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log("error");
+                alert("You don't have permission to delete playlists created by others.");
             }
         });
     }
@@ -345,7 +347,7 @@ $(document).ready(function () {
             url: "http://localhost:8080/playlist/getPlaylists",
             dataSrc: "",
         },
-        order: [[ 3, "asc" ]],
+        order: [[ 2, "desc" ]],
         columns: [
             {
                 "className":      'details-control',
@@ -566,7 +568,7 @@ $(document).ready(function () {
             url: "http://localhost:8080/playlist/getPlaylists",
             dataSrc: "",
         },
-        order: [[ 3, "asc" ]],
+        order: [[ 1, "desc" ]],
         columns: [
             {
                 "data": 'playlistTitle',

@@ -94,7 +94,7 @@ public class PlaylistService {
             playlistRepository.save(playlist);
 
         } catch (RuntimeException ex) {
-            throw new PlaylistNameExistException("Playlist name already exist");
+            throw new PlaylistNameExistException("Playlist name already exists");
         }
     }
 
