@@ -73,6 +73,7 @@ $(document).ready(function () {
                 if(isAdmin()){
                     $adminNav.show();
                     $adminPanel.show();
+                    location.reload();
                     alert("Welcome, admin!");
                 } else {
                     alert("You have successfully logged in!");
@@ -130,6 +131,7 @@ $(document).ready(function () {
             success: function (data, textStatus, jqXHR) {
                 $('#playlistTable').DataTable().ajax.reload();
                 $('#playlist-form')[0].reset();
+                location.reload();
                 alert("Your playlist was successfully created!");
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -141,18 +143,16 @@ $(document).ready(function () {
                         .find(".modal-body")
                         .empty()
                         .html("<p>Message from server:<br>" + jqXHR.responseText + "</p>");
-
-                } else if (jqXHR.status === 400) {
-                    alert("Wrong input.");
+                }
+                if (jqXHR.status === 400) {
+                    alert("Playlist cannot be created. Wrong input.");
 
                     $('#loginErrorModal')
                         .modal("show")
                         .find(".modal-body")
                         .empty()
                         .html("<p>Message from server:<br>" + jqXHR.responseText + "</p>");
-                }
-
-                else {
+                } else {
                     throw new Error("an unexpected error occured: " + errorThrown);
                     alert("The playlist could not be created.");
                 }
@@ -251,6 +251,7 @@ $(document).ready(function () {
         // `d` is the original data object for the row
         return '<table cellpadding="5" cellspacing="0" id="'+table_id+'" class="display responsive nowrap"  style="width: 100%">'+
             '<thead>'+
+            '<th>Preview</th>'+
             '<th>Track Title</th>'+
             '<th>Genre</th>'+
             '<th>Artist name</th>'+
@@ -258,6 +259,16 @@ $(document).ready(function () {
             '<th>Rating</th>'+
             '</thead>'+
             '</table>';
+    }
+
+    function playPause (data) {
+        var audio = data.firstChild;
+
+        if (audio.paused) {
+            audio.play();
+        } else {
+            audio.pause();
+        }
     }
 
     function sub_DataTable(playlist_id, table_id) {
@@ -268,11 +279,19 @@ $(document).ready(function () {
                 type: "GET",
                 contentType: "application/json",
                 dataType: "json",
-                url: "http://localhost:8080/playlist/getTracks/" + playlist_id,
+                url: "/playlist/getTracks/" + playlist_id,
                 dataSrc: "",
             },
-            order: [[ 4, "desc" ]],
+            order: [[ 5, "desc" ]],
             columns: [
+                {"data": null,
+                    editField: 'preview',
+                    fnCreatedCell: function (nTd, cellData, rowData) {
+                        $(nTd).html("<a><audio src='" + rowData.preview + "'></audio>" +
+                            "<img style='height: 8%' src='https://lh3.googleusercontent.com/JqLN64fZj4nNQ4R98drSE68RKMBNfY2ZvfZylqlFY-oPwSCxIKUmPO4nL0A_V0-pEBM4'></a>");
+
+                    }
+                },
                 {"data": 'title'},
                 {"data": 'genre.name'},
                 {"data": 'artist.name'},
@@ -280,13 +299,18 @@ $(document).ready(function () {
                 {"data": 'rank'}],
             select: true
         });
-    }
 
+        $('#' + table_id).on( 'click', 'tbody a', function (e) {
+            playPause(this);
+        } );
+
+
+    }
     var editor = new $.fn.dataTable.Editor({
         ajax: {
             edit: {
                 type: 'POST',
-                url: 'http://localhost:8080/playlist/userUpdatePlaylist',
+                url: '/playlist/userUpdatePlaylist',
                 contentType: "application/json",
                 dataType: 'html',
                 headers: createAuthorizationTokenHeader(),
@@ -355,7 +379,7 @@ $(document).ready(function () {
             type: "GET",
             contentType: "application/json",
             dataType: "json",
-            url: "http://localhost:8080/playlist/getPlaylists",
+            url: "/playlist/getPlaylists",
             dataSrc: "",
         },
         order: [[ 2, "desc" ]],
@@ -422,7 +446,7 @@ $(document).ready(function () {
             type: "GET",
             contentType: "application/json",
             dataType: "json",
-            url: "http://localhost:8080/getUsers",
+            url: "/getUsers",
             dataSrc: "",
             headers: createAuthorizationTokenHeader(),
         },
@@ -459,7 +483,7 @@ $(document).ready(function () {
         ajax: {
             edit: {
                 type: 'POST',
-                url: 'http://localhost:8080/adminUpdateUser',
+                url: '/adminUpdateUser',
                 contentType: "application/json",
                 dataType: 'html',
                 headers: createAuthorizationTokenHeader(),
@@ -576,7 +600,7 @@ $(document).ready(function () {
             type: "GET",
             contentType: "application/json",
             dataType: "json",
-            url: "http://localhost:8080/playlist/getPlaylists",
+            url: "/playlist/getPlaylists",
             dataSrc: "",
         },
         order: [[ 1, "desc" ]],
@@ -635,7 +659,7 @@ $(document).ready(function () {
         ajax: {
             edit: {
                 type: 'POST',
-                url: 'http://localhost:8080/playlist/adminUpdatePlaylist',
+                url: '/playlist/adminUpdatePlaylist',
                 contentType: "application/json",
                 dataType: 'html',
                 headers: createAuthorizationTokenHeader(),
