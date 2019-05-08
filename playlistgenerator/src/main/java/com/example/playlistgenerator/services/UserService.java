@@ -5,28 +5,34 @@ import com.example.playlistgenerator.models.RoleName;
 import com.example.playlistgenerator.models.User;
 import com.example.playlistgenerator.repositories.RoleRepository;
 import com.example.playlistgenerator.repositories.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @Component
 @Service
 public class UserService {
-    @Autowired
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
+
     private UserRepository userRepository;
 
-    @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    UserService(UserRepository userRepository, RoleRepository roleRepository) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+    }
 
     public Iterable<User> getAllUsers() {
         Iterable<User> users = userRepository.findAll();
         return users;
     }
 
-    public void adminUpdateUsers(User user){
+    public void adminUpdateUsers(User user) {
         User userToEdit = userRepository.findById(user.getId()).get();
         userToEdit.setEmail(user.getEmail());
         userRepository.save(userToEdit);
@@ -51,13 +57,13 @@ public class UserService {
 
         Role roleToDelete = null;
 
-        for (Role role: userToEdit.getRoles()) {
-            if(role.getName().equals(RoleName.ROLE_ADMIN)){
+        for (Role role : userToEdit.getRoles()) {
+            if (role.getName().equals(RoleName.ROLE_ADMIN)) {
                 roleToDelete = role;
             }
         }
 
-        if(roleToDelete != null){
+        if (roleToDelete != null) {
             userToEdit.getRoles().remove(roleToDelete);
             userRepository.save(userToEdit);
         }
